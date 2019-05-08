@@ -90,6 +90,13 @@
 
 
 
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/btn_gmail"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/btn_registrar"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></com.google.android.gms.common.SignInButton>
 
 
 
