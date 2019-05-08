@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title=""></item>
+    <item android:title=""></item>
+
+    <item android:title="mi Perfil" android:icon="@drawable/user"></item>
+    <item android:title="Lineas de Trasporte" android:icon="@drawable/bus"></item>
+
+    <item android:title=""></item>
+    <item android:title=""></item>
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/cerrar"
+                android:icon="@drawable/icon_exit"
+                android:title="cerrar sesion"></item>
+        </menu>
+
+    </item>
+
+</menu>

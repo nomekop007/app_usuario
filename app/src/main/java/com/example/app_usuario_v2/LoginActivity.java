@@ -19,12 +19,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-
+        //librerias del cliente de google
         private GoogleApiClient googleApiClient;
         private SignInButton signInButton;
-public static final int SIGN_IN_CODE = 777;
 
-    EditText t_correo, t_pass;
+
+        public static final int SIGN_IN_CODE = 777;
+
+          EditText t_correo, t_pass;
 
 
 
@@ -32,28 +34,22 @@ public static final int SIGN_IN_CODE = 777;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         t_correo = findViewById(R.id.txt_correo);
         t_pass = findViewById(R.id.txt_pass);
-        signInButton = findViewById(R.id.btn_gmail);
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-
-        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,this).addApi(Auth.GOOGLE_SIGN_IN_API,gso).build();
 
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(intent,SIGN_IN_CODE);
-            }
-        });
-
+        logeoConGmail();
 
     }
 
 
+
+
     public void iniciar(View view) {
+
+
+
         String correo = t_correo.getText().toString();
         String pass = t_pass.getText().toString();
 
@@ -75,6 +71,24 @@ public static final int SIGN_IN_CODE = 777;
 
 
 
+
+
+        // inicio de logeo con cuenta gmail
+    public void logeoConGmail(){
+        signInButton = findViewById(R.id.btn_gmail);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+
+        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,this).addApi(Auth.GOOGLE_SIGN_IN_API,gso).build();
+
+
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+                startActivityForResult(intent,SIGN_IN_CODE);
+            }
+        });
+    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -108,4 +122,5 @@ public static final int SIGN_IN_CODE = 777;
         startActivity(intent);
 
     }
+    // fin de logeo
 }
