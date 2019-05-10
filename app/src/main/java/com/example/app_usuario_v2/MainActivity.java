@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             //informacion del usuario que se muestra en el drawer header
             ((TextView) header.findViewById(R.id.nombre)).setText(account.getDisplayName());
             ((TextView) header.findViewById(R.id.gmail)).setText(account.getEmail());
+            ((TextView) header.findViewById(R.id.code)).setText(account.getId());
 
         }else {
             goLoginInSreen();

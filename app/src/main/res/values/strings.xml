@@ -2,4 +2,5 @@
     <string name="app_name">app_usuario_v2</string>
     <string name="openDrawer">open</string>
     <string name="closeDrawer">close</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
