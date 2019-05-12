@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.app_usuario_v2.model.Usuario;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -29,8 +30,11 @@ import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -43,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     //clase de login gmail
     private GoogleApiClient googleApiClient;
 
+    //hacer referencia a la base de datos de firebase
+    DatabaseReference mydatabasereference = FirebaseDatabase.getInstance().getReference();
 
     //declarar objeto firebaseAuth
     private FirebaseAuth firebaseAuth;
@@ -136,6 +142,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Log.e("UID : ", user.getUid() + "");
         Log.e("numero : ", user.getPhoneNumber() + "");
 
+
+        mydatabasereference.child("usuario").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+             Usuario perfil = dataSnapshot.getValue(Usuario.class);
+
+                //mostrar los datos del perfil en el header del drawer
+
+                //informacion del usuario que se muestra en el drawer header
+                ((TextView) header.findViewById(R.id.usuario)).setText(perfil.getNombreUsuario()+"");
+                ((TextView) header.findViewById(R.id.nombre)).setText(perfil.getNombreCompleto()+"");
+                ((TextView) header.findViewById(R.id.gmail)).setText(perfil.getCorreoElectronico()+"");
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+
+
     }
 
 
@@ -180,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             //informacion del usuario que se muestra en el drawer header
             ((TextView) header.findViewById(R.id.nombre)).setText(account.getDisplayName());
             ((TextView) header.findViewById(R.id.gmail)).setText(account.getEmail());
-            ((TextView) header.findViewById(R.id.code)).setText(account.getId());
+            ((TextView) header.findViewById(R.id.code)).setText("Cuenta Google");
 
         } else {
             goLoginInSreen();
