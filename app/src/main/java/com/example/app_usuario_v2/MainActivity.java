@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         });
 
         toolbar.setTitle("Mapa");
-
         setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.openDrawer,R.string.closeDrawer);
         drawerLayout.setDrawerListener(toggle);

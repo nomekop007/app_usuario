@@ -44,6 +44,8 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/header"
+        app:itemTextColor="@color/colorAzul"
+        app:itemIconTint="@color/colorAzul"
         app:menu="@menu/menu_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
