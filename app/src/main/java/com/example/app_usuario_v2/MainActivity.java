@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Toast.makeText(MainActivity.this, "sesion cerrada!", Toast.LENGTH_SHORT).show();
 
         startActivity(intent);
-
+        finish();
     }
 
     @Override
@@ -261,4 +261,5 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
 
     }
+
 }
