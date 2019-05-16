@@ -3,4 +3,6 @@
     <string name="openDrawer">open</string>
     <string name="closeDrawer">close</string>
     <string name="title_activity_maps">Map</string>
+    <string name="facebook_app_id">300345347545674</string> <string name="fb_login_protocol_scheme">fb300345347545674</string>
+
 </resources>

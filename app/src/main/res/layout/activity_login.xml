@@ -98,6 +98,13 @@
             android:layout_height="wrap_content"></com.google.android.gms.common.SignInButton>
 
 
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/btn_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/btn_gmail"
+            android:layout_marginTop="10dp"/>
 
 
 
