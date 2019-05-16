@@ -7,10 +7,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -19,9 +27,14 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -32,12 +45,19 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     // 2 es logeo con google
     // 3 es logeo con facebook
 
-    //librerias del cliente de google
+    //variables del cliente de google
     private GoogleApiClient googleApiClient;
     private SignInButton signInButton;
 
+    //variables del cliente facebook
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
+
+
     //declarar objeto firebaseAuth
     private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener firebaseAuthListener;
+
 
     //declarar circulo de cargando
     private ProgressDialog progressDialog;
@@ -53,11 +73,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //cierra todas las sesion cada vez que se inicia la app
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+
+
         //iniciar progressDialig
         progressDialog = new ProgressDialog(this);
 
         logeoConGmail();
-
+        logeoConFacebook();
     }
 
             //logearse con cuenta creada
@@ -113,10 +138,92 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
 
+
     public void registrar(View view) {
         Intent intent = new Intent(this, RegistrarActivity.class);
         startActivity(intent);
     }
+
+
+public void logeoConFacebook(){
+        callbackManager = CallbackManager.Factory.create();
+        loginButton = findViewById(R.id.btn_facebook);
+        loginButton.setReadPermissions(Arrays.asList("email"));
+
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+             hardleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(getApplicationContext(), "se cancelo la operacion", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(getApplicationContext(), "ocurrio un error al ingresar", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        firebaseAuth = firebaseAuth.getInstance();
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        if (user != null){
+
+                            TIPO_LOGEO=3;
+                            goMainScreen(TIPO_LOGEO);
+                        }
+                progressDialog.dismiss();
+            }
+        };
+
+}
+
+    private void hardleFacebookAccessToken(AccessToken accessToken) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
+        //cuadro de espera
+        progressDialog.setMessage("iniciando Sesion con Facebook...");
+        progressDialog.show();
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+
+
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (!task.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "ocurrio un error de login", Toast.LENGTH_LONG).show();
+                    }
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseAuth.addAuthStateListener(firebaseAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        firebaseAuth.removeAuthStateListener(firebaseAuthListener);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // inicio de logeo con cuenta gmail
@@ -151,12 +258,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         if (requestCode == 777) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
+            handleSignInResultGoogle(result);
 
         }
+        //metodo de facebook
+        callbackManager.onActivityResult(requestCode,resultCode,data);
 
     }
-    private void handleSignInResult(GoogleSignInResult result) {
+    private void handleSignInResultGoogle(GoogleSignInResult result) {
         if (result.isSuccess()) {
 
             TIPO_LOGEO = 2;
@@ -175,5 +284,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         startActivity(intent);
 
     }
+
+
     // fin de logeo
 }

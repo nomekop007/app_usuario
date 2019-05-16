@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.app_usuario_v2.model.Usuario;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -81,13 +82,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (TIPO_LOGEO == 2) {
             configuraciondeLoginGmail();
         } else if (TIPO_LOGEO == 3) {
-            //configuracionLoginFacebook();
+            configuracionLoginFacebook();
         } else {
             configurardeLoginNormal();
 
         }
 
     }
+
 
 
     // se inicializa y configura las opciones del drawer
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         if (TIPO_LOGEO == 2) {
                             cerrarSesionGoogle();
                         } else if (TIPO_LOGEO == 3) {
-                            //cerrarSesionFacebook();
+                            cerrarSesionFacebook();
                         } else {
                             cerrarSesion();
                         }
@@ -130,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
 
+    //metodo para logearse con cuenta normal
     public void configurardeLoginNormal() {
         //inicializar el objeto firebaseAuth
         firebaseAuth = FirebaseAuth.getInstance();
@@ -164,6 +167,54 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
     }
+
+
+    //metodo para logearse con cuenta facebook
+    private void configuracionLoginFacebook() {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null){
+            //informacion del usuario que se muestra en el drawer header
+            ((TextView) header.findViewById(R.id.nombre)).setText(user.getDisplayName());
+            ((TextView) header.findViewById(R.id.gmail)).setText(user.getEmail());
+            ((TextView) header.findViewById(R.id.code)).setText("Cuenta Facebook");
+        }else {
+            goLoginInSreen();
+        }
+    }
+
+    private void cerrarSesionFacebook() {
+
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+        goLoginInSreen();
+        progressDialog.dismiss();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // metodos para logearse con cuenta gmail
@@ -233,6 +284,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onResult(@NonNull Status status) {
                 if ((status.isSuccess())) {
+
+                    //agregado?
+                    firebaseAuth.getInstance().signOut();
+                    LoginManager.getInstance().logOut();
+
                     goLoginInSreen();
                 } else {
                     Toast.makeText(getApplicationContext(), "no se pudo cerrar sesion", Toast.LENGTH_LONG).show();
@@ -246,16 +302,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void cerrarSesion() {
         firebaseAuth.getInstance().signOut();
+
+        //agregado?
+        LoginManager.getInstance().logOut();
         goLoginInSreen();
         progressDialog.dismiss();
     }
 
     @Override
     public void onBackPressed() {
+
         if (TIPO_LOGEO == 2) {
             cerrarSesionGoogle();
         } else if (TIPO_LOGEO == 3) {
-            //cerrarSesionFacebook();
+            cerrarSesionFacebook();
         } else {
             cerrarSesion();
         }
