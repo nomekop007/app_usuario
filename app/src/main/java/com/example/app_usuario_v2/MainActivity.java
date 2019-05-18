@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.app_usuario_v2.model.Usuario;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
@@ -91,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
 
-
     // se inicializa y configura las opciones del drawer
     public void configuracionDrawer() {
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -150,19 +151,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-             Usuario perfil = dataSnapshot.getValue(Usuario.class);
+                Usuario perfil = dataSnapshot.getValue(Usuario.class);
 
                 //mostrar los datos del perfil en el header del drawer
 
                 //informacion del usuario que se muestra en el drawer header
-                ((TextView) header.findViewById(R.id.usuario)).setText(perfil.getNombreUsuario()+"");
-                ((TextView) header.findViewById(R.id.nombre)).setText(perfil.getNombreCompleto()+"");
-                ((TextView) header.findViewById(R.id.gmail)).setText(perfil.getCorreoElectronico()+"");
+                ((TextView) header.findViewById(R.id.usuario)).setText(perfil.getNombreUsuario() + "");
+                ((TextView) header.findViewById(R.id.nombre)).setText(perfil.getNombreCompleto() + "");
+                ((TextView) header.findViewById(R.id.gmail)).setText(perfil.getCorreoElectronico() + "");
 
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
 
 
@@ -173,12 +175,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void configuracionLoginFacebook() {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null){
+        if (user != null) {
             //informacion del usuario que se muestra en el drawer header
             ((TextView) header.findViewById(R.id.nombre)).setText(user.getDisplayName());
             ((TextView) header.findViewById(R.id.gmail)).setText(user.getEmail());
             ((TextView) header.findViewById(R.id.code)).setText("Cuenta Facebook");
-        }else {
+
+            //cargar imagen
+            Glide.with(this)
+                    .load(user.getPhotoUrl())
+                    .centerCrop()
+                    .circleCrop()
+                    .error(R.drawable.error)
+                    .placeholder(R.drawable.cargando)
+                    .thumbnail(0.5f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into((ImageView) header.findViewById(R.id.imagenUser));
+
+        } else {
             goLoginInSreen();
         }
     }
@@ -190,31 +204,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         goLoginInSreen();
         progressDialog.dismiss();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // metodos para logearse con cuenta gmail
@@ -259,6 +248,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             ((TextView) header.findViewById(R.id.nombre)).setText(account.getDisplayName());
             ((TextView) header.findViewById(R.id.gmail)).setText(account.getEmail());
             ((TextView) header.findViewById(R.id.code)).setText("Cuenta Google");
+
+            //cargar imagen
+            Glide.with(this)
+                    .load(account.getPhotoUrl())
+                    .centerCrop()
+                    .circleCrop()
+                    .error(R.drawable.error)
+                    .placeholder(R.drawable.cargando)
+                    .thumbnail(0.5f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into((ImageView) header.findViewById(R.id.imagenUser));
 
         } else {
             goLoginInSreen();

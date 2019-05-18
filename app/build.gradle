@@ -29,7 +29,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:15.+'
     implementation 'com.google.firebase:firebase-auth:15.+'
 
-
+    implementation 'com.github.bumptech.glide:glide:4.+'
 
     implementation 'com.google.android.gms:play-services-auth:15.+'
     implementation 'com.google.android.gms:play-services-maps:15.+'
@@ -37,6 +37,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:15.+'
 
     implementation 'com.facebook.android:facebook-login:[5,6)'
+
+
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

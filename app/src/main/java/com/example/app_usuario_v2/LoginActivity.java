@@ -20,6 +20,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -32,12 +33,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
-
 
 
     public static int TIPO_LOGEO = 0;
@@ -85,7 +86,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         logeoConFacebook();
     }
 
-            //logearse con cuenta creada
+    //logearse con cuenta creada
     public void iniciar(View view) {
         t_correo = findViewById(R.id.txt_correo);
         t_pass = findViewById(R.id.txt_pass);
@@ -110,22 +111,22 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             //inicializar el objeto firebaseAuth
             firebaseAuth = FirebaseAuth.getInstance();
 
-            firebaseAuth.signInWithEmailAndPassword(correo,pass)
+            firebaseAuth.signInWithEmailAndPassword(correo, pass)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
 
                                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                                Toast.makeText(LoginActivity.this, "Bienvenido "+user.getEmail(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Bienvenido " + user.getEmail(), Toast.LENGTH_SHORT).show();
                                 //metodo para redireccionar al main
 
-                                TIPO_LOGEO=1;
+                                TIPO_LOGEO = 1;
 
-                                 goMainScreen(TIPO_LOGEO);
-                            }else {
+                                goMainScreen(TIPO_LOGEO);
+                            } else {
                                 Toast.makeText(LoginActivity.this, "nombre o contraseña incorrecto", Toast.LENGTH_SHORT).show();
-                             t_pass.setText("");
+                                t_pass.setText("");
                             }
 
                             progressDialog.dismiss();
@@ -137,15 +138,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-
-
     public void registrar(View view) {
         Intent intent = new Intent(this, RegistrarActivity.class);
         startActivity(intent);
     }
 
 
-public void logeoConFacebook(){
+
+
+    public void logeoConFacebook() {
         callbackManager = CallbackManager.Factory.create();
         loginButton = findViewById(R.id.btn_facebook);
         loginButton.setReadPermissions(Arrays.asList("email"));
@@ -153,7 +154,7 @@ public void logeoConFacebook(){
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-             hardleFacebookAccessToken(loginResult.getAccessToken());
+                hardleFacebookAccessToken(loginResult.getAccessToken());
             }
 
             @Override
@@ -171,17 +172,17 @@ public void logeoConFacebook(){
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        if (user != null){
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
 
-                            TIPO_LOGEO=3;
-                            goMainScreen(TIPO_LOGEO);
-                        }
+                    TIPO_LOGEO = 3;
+                    goMainScreen(TIPO_LOGEO);
+                }
                 progressDialog.dismiss();
             }
         };
 
-}
+    }
 
     private void hardleFacebookAccessToken(AccessToken accessToken) {
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
@@ -193,12 +194,22 @@ public void logeoConFacebook(){
 
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (!task.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "ocurrio un error de login", Toast.LENGTH_LONG).show();
-                    }
+                if (!task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "ocurrio un error de login", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
+
+
+
+
+
+
+
+
+
+
 
     @Override
     protected void onStart() {
@@ -221,20 +232,14 @@ public void logeoConFacebook(){
 
 
 
-
-
-
-
-
     // inicio de logeo con cuenta gmail
     public void logeoConGmail() {
 
-
         signInButton = findViewById(R.id.btn_gmail);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail().build();
 
         googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
-
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,29 +252,37 @@ public void logeoConFacebook(){
                 startActivityForResult(intent, SIGN_IN_CODE);
             }
         });
+
+
+
     }
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 777) {
+        if (requestCode == SIGN_IN_CODE) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResultGoogle(result);
 
         }
         //metodo de facebook
-        callbackManager.onActivityResult(requestCode,resultCode,data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
 
     }
+
     private void handleSignInResultGoogle(GoogleSignInResult result) {
         if (result.isSuccess()) {
 
             TIPO_LOGEO = 2;
             goMainScreen(TIPO_LOGEO);
+
+
         } else {
 
             Toast.makeText(this, "no se puede iniciar sesion", Toast.LENGTH_LONG).show();
@@ -277,12 +290,17 @@ public void logeoConFacebook(){
         }
         progressDialog.dismiss();
     }
+
+
+
+
+
     private void goMainScreen(int tipo) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("TIPO_LOGEO",tipo+"");
+        intent.putExtra("TIPO_LOGEO", tipo + "");
         startActivity(intent);
-
+        progressDialog.dismiss();
     }
 
 
