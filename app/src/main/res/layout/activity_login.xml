@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginVertical="50dp"
+        android:layout_marginVertical="20dp"
         android:background="@drawable/bordes">
 
         <ImageView
@@ -52,15 +52,24 @@
             android:inputType="textEmailAddress" />
 
 
-        <EditText
+
+
+        <android.support.design.widget.TextInputLayout
             android:id="@+id/txt_pass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_correo"
             android:layout_margin="4dp"
-            android:hint="contraseña"
-            android:inputType="textPassword" />
+            app:passwordToggleEnabled="true"
+            app:errorEnabled="true">
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
+                android:hint="contraseña"
+                android:inputType="textPassword"/>
+
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/btn_ingresar"

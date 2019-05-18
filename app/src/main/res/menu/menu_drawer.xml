@@ -6,6 +6,7 @@
 
     <item android:title="mi Perfil" android:icon="@drawable/user"></item>
     <item android:title="Lineas de Trasporte" android:icon="@drawable/bus"></item>
+    <item android:title="Mapa" android:icon="@drawable/map"></item>
 
     <item android:title=""></item>
     <item android:title=""></item>

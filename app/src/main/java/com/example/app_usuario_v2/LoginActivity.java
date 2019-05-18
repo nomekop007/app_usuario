@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -66,8 +67,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     public static final int SIGN_IN_CODE = 777;
 
-    EditText t_correo, t_pass;
-
+    EditText t_correo;
+    TextInputLayout t_pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,22 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         logeoConGmail();
         logeoConFacebook();
+
+
+
+
+        firebaseAuth = firebaseAuth.getInstance();
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+
+                    goMainScreen(TIPO_LOGEO);
+                }
+                progressDialog.dismiss();
+            }
+        };
     }
 
     //logearse con cuenta creada
@@ -92,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         t_pass = findViewById(R.id.txt_pass);
 
         String correo = t_correo.getText().toString();
-        String pass = t_pass.getText().toString();
+        String pass = t_pass.getEditText().getText().toString().trim();
 
         if (correo.isEmpty()) {
             t_correo.setError("Campo Vacio");
@@ -126,7 +143,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 goMainScreen(TIPO_LOGEO);
                             } else {
                                 Toast.makeText(LoginActivity.this, "nombre o contraseña incorrecto", Toast.LENGTH_SHORT).show();
-                                t_pass.setText("");
+                                t_pass.getEditText().setText("");
+                                t_pass.setError(null);
                             }
 
                             progressDialog.dismiss();
@@ -151,9 +169,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         loginButton = findViewById(R.id.btn_facebook);
         loginButton.setReadPermissions(Arrays.asList("email"));
 
+        //se oprime botton de facebook
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
             @Override
             public void onSuccess(LoginResult loginResult) {
+
+
+                //cuadro de espera
+                progressDialog.setMessage("iniciando Sesion con Facebook...");
+                progressDialog.show();
+
+                TIPO_LOGEO = 3;
+
+
                 hardleFacebookAccessToken(loginResult.getAccessToken());
             }
 
@@ -168,30 +197,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
-        firebaseAuth = firebaseAuth.getInstance();
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
 
-                    TIPO_LOGEO = 3;
-                    goMainScreen(TIPO_LOGEO);
-                }
-                progressDialog.dismiss();
-            }
-        };
 
     }
 
     private void hardleFacebookAccessToken(AccessToken accessToken) {
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
-        //cuadro de espera
-        progressDialog.setMessage("iniciando Sesion con Facebook...");
-        progressDialog.show();
+
+
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-
-
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
@@ -237,16 +251,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         signInButton = findViewById(R.id.btn_gmail);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail().build();
+                .requestEmail()
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .build();
 
         googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
 
+
+        //se oprime botton de google
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //cuadro de espera
                 progressDialog.setMessage("iniciando Sesion con Google...");
                 progressDialog.show();
+                TIPO_LOGEO = 2;
 
                 Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
                 startActivityForResult(intent, SIGN_IN_CODE);
@@ -271,6 +290,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             handleSignInResultGoogle(result);
 
         }
+
         //metodo de facebook
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
@@ -279,20 +299,28 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void handleSignInResultGoogle(GoogleSignInResult result) {
         if (result.isSuccess()) {
 
-            TIPO_LOGEO = 2;
-            goMainScreen(TIPO_LOGEO);
-
+             firebaseAuthWithGoogle(result.getSignInAccount());
 
         } else {
 
-            Toast.makeText(this, "no se puede iniciar sesion", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Sesion cancelada", Toast.LENGTH_LONG).show();
 
         }
         progressDialog.dismiss();
     }
 
+    private void firebaseAuthWithGoogle(GoogleSignInAccount signInAccount) {
 
-
+        AuthCredential credential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(),null);
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (!task.isSuccessful()){
+                    Toast.makeText(getApplicationContext(), "ocurrio un error de login", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
 
 
     private void goMainScreen(int tipo) {
