@@ -4,6 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -63,6 +66,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private NavigationView navigationView;
     private View header;
 
+    //elementos de fragmentos
+    private FragmentManager fm;
+    private FragmentTransaction ft;
+
+
+
     //declarar circulo de cargando
     private ProgressDialog progressDialog;
 
@@ -90,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         }
 
+
     }
 
 
@@ -99,6 +109,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         toolbar = findViewById(R.id.toolbar);
         navigationView = findViewById(R.id.navigation);
         header = ((NavigationView) findViewById(R.id.navigation)).getHeaderView(0);
+
+        //conf de los fragmentos
+        fm = getSupportFragmentManager();
+        ft = fm.beginTransaction();
+
+       //carga primeramente el mapa
+        mapFragment mapFragment = new mapFragment();
+        fm.beginTransaction().replace(R.id.mainActivity,mapFragment).commit();
+
 
         //configuracion del comportamiento del drawer
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -120,7 +139,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         }
 
                         break;
+                    case R.id.mapa:
+                        //carga nuevamente el mapa
+                        mapFragment mapFragment = new mapFragment();
+                        fm.beginTransaction().replace(R.id.mainActivity,mapFragment).commit();
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                        break;
                 }
+
+               drawerLayout.closeDrawers();
+
                 return true;
             }
         });
@@ -302,8 +330,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void cerrarSesion() {
         firebaseAuth.getInstance().signOut();
-
-        //agregado?
         LoginManager.getInstance().logOut();
         goLoginInSreen();
         progressDialog.dismiss();

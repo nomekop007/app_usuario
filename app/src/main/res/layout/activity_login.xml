@@ -100,20 +100,20 @@
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/btn_gmail"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="60dp"
             android:layout_below="@id/btn_registrar"
             android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></com.google.android.gms.common.SignInButton>
+            android:layout_width="165dp"
+            android:layout_height="30dp"></com.google.android.gms.common.SignInButton>
 
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/btn_facebook"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="160dp"
+            android:layout_height="30dp"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/btn_gmail"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
            />
 
 

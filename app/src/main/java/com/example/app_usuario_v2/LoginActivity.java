@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
 
-
+            //escucha si es que se habre alguna instancia de logeo
         firebaseAuth = firebaseAuth.getInstance();
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -174,15 +174,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             @Override
             public void onSuccess(LoginResult loginResult) {
-
-
                 //cuadro de espera
                 progressDialog.setMessage("iniciando Sesion con Facebook...");
                 progressDialog.show();
-
                 TIPO_LOGEO = 3;
-
-
                 hardleFacebookAccessToken(loginResult.getAccessToken());
             }
 
@@ -304,9 +299,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         } else {
 
             Toast.makeText(this, "Sesion cancelada", Toast.LENGTH_LONG).show();
-
+            progressDialog.dismiss();
         }
-        progressDialog.dismiss();
+
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount signInAccount) {
@@ -317,6 +312,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), "ocurrio un error de login", Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
                 }
             }
         });
