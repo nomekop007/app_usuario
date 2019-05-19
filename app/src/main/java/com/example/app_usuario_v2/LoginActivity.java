@@ -211,7 +211,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-
+//fin de logeo facebook
 
 
 
@@ -319,6 +319,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
+    // fin de logeo google
+
     private void goMainScreen(int tipo) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -328,5 +330,4 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-    // fin de logeo
 }
