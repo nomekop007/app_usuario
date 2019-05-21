@@ -53,9 +53,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class mapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -71,6 +69,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<LineaTrasporte> lineasActuales = new ArrayList<>();
 
     private int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
+    private int BORRADOR = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -98,18 +97,16 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
             dialog.show();
         }
 
+
         myDatabase = FirebaseDatabase.getInstance().getReference();
 
-
         SolicitudDePermisoGPS();
-
         octenerLineasTrasporte();
         octenerTrasportes();
         octenerUbicacionEnTimpoReal();
-
     }
 
-    public void SolicitudDePermisoGPS() {
+    private void SolicitudDePermisoGPS() {
 
         //pregunta si el permiso no esta dado
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -125,6 +122,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
         }
 
+
     }
 
 
@@ -135,8 +133,10 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mMap.setMyLocationEnabled(true);
@@ -185,8 +185,6 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-    public int BORRADOR = 0;
-
     private void octenerUbicacionEnTimpoReal() {
 
         //este metodo se ejecuta una vez para extraer las coordenadas de la base de datos
@@ -200,72 +198,71 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                     coordenada c = snapshot.getValue(coordenada.class);
 
 
-
-                        //este metodo se ejecuta cada vez que la coordenada especifica sufre un cambio
-                        myDatabase.child("coordenada").child(c.getIdTrasporte()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                                coordenada cord = dataSnapshot.getValue(coordenada.class);
-                                double latitud = cord.getLatitud();
-                                double longitud = cord.getLongitud();
+                    //este metodo se ejecuta cada vez que la coordenada especifica sufre un cambio
+                    myDatabase.child("coordenada").child(c.getIdTrasporte()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                                for (Trasporte trasporte : ListaTrasportes) {
+                            coordenada cord = dataSnapshot.getValue(coordenada.class);
+                            double latitud = cord.getLatitud();
+                            double longitud = cord.getLongitud();
 
-                                    if (trasporte.getIdTrasporte().equals(cord.getIdTrasporte())) {
 
-                                        MarkerOptions markerOptions = new MarkerOptions();
-                                        markerOptions.position(new LatLng(latitud, longitud));
+                            for (Trasporte trasporte : ListaTrasportes) {
 
-                                        markerOptions.icon(bitmapDescriptorFromVector(getContext(),R.drawable.icon));
+                                if (trasporte.getIdTrasporte().equals(cord.getIdTrasporte())) {
 
-                                        markerOptions.snippet("Patente: " + trasporte.getPatente() + "\n"
-                                                + "Conductor: " + trasporte.getNombreConductor() + "\n "
-                                                + "calificacion : " + trasporte.getCalificacion());
+                                    MarkerOptions markerOptions = new MarkerOptions();
+                                    markerOptions.position(new LatLng(latitud, longitud));
 
-                                        //extrae el nombre de la linea
-                                        for (LineaTrasporte linea : lineasActuales) {
-                                            if (linea.getIdLinea() == trasporte.getIdLinea()) {
-                                                markerOptions.title(linea.getNombreLinea());
-                                            }
+                                    markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.icon));
+
+                                    markerOptions.snippet("Patente: " + trasporte.getPatente() + "\n"
+                                            + "Conductor: " + trasporte.getNombreConductor() + "\n "
+                                            + "calificacion : " + trasporte.getCalificacion());
+
+                                    //extrae el nombre de la linea
+                                    for (LineaTrasporte linea : lineasActuales) {
+                                        if (linea.getIdLinea() == trasporte.getIdLinea()) {
+                                            markerOptions.title(linea.getNombreLinea());
                                         }
+                                    }
 
 
-                                        //borra la coordenada antiguo y la remplaza por la nueva
-                                        if (BORRADOR == 1) {
+                                    //borra la coordenada antiguo y la remplaza por la nueva
+                                    if (BORRADOR == 1) {
 
-                                            for (Marker marker : RealTimeMarkets) {
-                                                if (marker.getSnippet().equals(markerOptions.getSnippet())) {
-                                                    marker.remove();
-                                                }
-                                            }
-                                        }
-
-                                        if (latitud != 0 || longitud != 0) {
-                                            try {
-                                                RealTimeMarkets.add(mMap.addMarker(markerOptions));
-                                            }catch (Exception e){
-
+                                        for (Marker marker : RealTimeMarkets) {
+                                            if (marker.getSnippet().equals(markerOptions.getSnippet())) {
+                                                marker.remove();
                                             }
                                         }
                                     }
+
+                                    if (latitud != 0 || longitud != 0) {
+                                        try {
+                                            RealTimeMarkets.add(mMap.addMarker(markerOptions));
+                                        } catch (Exception e) {
+
+                                        }
+                                    }
                                 }
-
-
                             }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
 
-                            }
-                        });
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
 
-                    }
+                }
 
-                    BORRADOR = 1;
+                BORRADOR = 1;
 
             }
 
@@ -278,8 +275,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-
-    public void octenerTrasportes() {
+    private void octenerTrasportes() {
 
         myDatabase.child("trasporte").addValueEventListener(new ValueEventListener() {
             @Override
@@ -313,8 +309,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-
-    public void octenerLineasTrasporte() {
+    private void octenerLineasTrasporte() {
         myDatabase.child("lineaTrasporte").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -331,23 +326,21 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-
     //metodo para agregar imagen en ves de marcador
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
         try {
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
-        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
+            Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+            vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+            Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            vectorDrawable.draw(canvas);
+            return BitmapDescriptorFactory.fromBitmap(bitmap);
         } catch (Exception e) {
             Log.e("error : ", "en vectorToBitmap");
             return null;
 
         }
     }
-
 
 
 }

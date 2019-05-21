@@ -57,6 +57,7 @@
         android:text="gmail"
         android:layout_toRightOf="@id/imagenUser"
         android:layout_below="@id/nombre"
+        android:textStyle="italic"
         />
     <TextView
         android:id="@+id/code"

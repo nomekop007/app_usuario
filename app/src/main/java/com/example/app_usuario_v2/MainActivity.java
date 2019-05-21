@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         navigationView = findViewById(R.id.navigation);
         header = ((NavigationView) findViewById(R.id.navigation)).getHeaderView(0);
 
+        toolbar.setTitle("Mapa");
         //conf de los fragmentos
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
@@ -141,11 +142,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         break;
                     case R.id.mapa:
                         //carga nuevamente el mapa
+                        toolbar.setTitle("Mapa");
                         mapFragment mapFragment = new mapFragment();
                         fm.beginTransaction().replace(R.id.mainActivity,mapFragment).commit();
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                         break;
+                    case  R.id.lineas:
+                        toolbar.setTitle("Lineas de Trasportes");
+                        LineaFragment lineaFragment = new LineaFragment();
+                        fm.beginTransaction().replace(R.id.mainActivity,lineaFragment).commit();
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                        break;
                 }
+
 
                drawerLayout.closeDrawers();
 
@@ -153,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         });
 
-        toolbar.setTitle("Mapa");
+
         setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer);
         drawerLayout.setDrawerListener(toggle);
