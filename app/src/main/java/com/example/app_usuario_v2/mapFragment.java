@@ -4,7 +4,7 @@ package com.example.app_usuario_v2;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -34,7 +34,6 @@ import com.example.app_usuario_v2.model.Trasporte;
 import com.example.app_usuario_v2.model.coordenada;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -190,7 +189,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
     private void octenerUbicacionEnTimpoReal() {
 
-        //este metodo se ejecuta cada ves que hay un cambio en la base de datos
+        //este metodo se ejecuta una vez para extraer las coordenadas de la base de datos
         myDatabase.child("coordenada").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -201,17 +200,18 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                     coordenada c = snapshot.getValue(coordenada.class);
 
 
-                    myDatabase.child("coordenada").child(c.getIdTrasporte()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        //este metodo se ejecuta cada vez que la coordenada especifica sufre un cambio
+                        myDatabase.child("coordenada").child(c.getIdTrasporte()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                            coordenada cord = dataSnapshot.getValue(coordenada.class);
-                            double latitud = cord.getLatitud();
-                            double longitud = cord.getLongitud();
+                                coordenada cord = dataSnapshot.getValue(coordenada.class);
+                                double latitud = cord.getLatitud();
+                                double longitud = cord.getLongitud();
 
 
-                            if (latitud != 0 || longitud != 0) {
                                 for (Trasporte trasporte : ListaTrasportes) {
 
                                     if (trasporte.getIdTrasporte().equals(cord.getIdTrasporte())) {
@@ -219,19 +219,23 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                                         MarkerOptions markerOptions = new MarkerOptions();
                                         markerOptions.position(new LatLng(latitud, longitud));
 
-                                        markerOptions.icon(vectorToBitmap(R.drawable.bus, Color.parseColor("#E22214")));
+                                        markerOptions.icon(bitmapDescriptorFromVector(getContext(),R.drawable.icon));
+
                                         markerOptions.snippet("Patente: " + trasporte.getPatente() + "\n"
                                                 + "Conductor: " + trasporte.getNombreConductor() + "\n "
                                                 + "calificacion : " + trasporte.getCalificacion());
 
-
+                                        //extrae el nombre de la linea
                                         for (LineaTrasporte linea : lineasActuales) {
                                             if (linea.getIdLinea() == trasporte.getIdLinea()) {
                                                 markerOptions.title(linea.getNombreLinea());
                                             }
                                         }
 
+
+                                        //borra la coordenada antiguo y la remplaza por la nueva
                                         if (BORRADOR == 1) {
+
                                             for (Marker marker : RealTimeMarkets) {
                                                 if (marker.getSnippet().equals(markerOptions.getSnippet())) {
                                                     marker.remove();
@@ -239,24 +243,30 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                                             }
                                         }
 
-                                        RealTimeMarkets.add(mMap.addMarker(markerOptions));
+                                        if (latitud != 0 || longitud != 0) {
+                                            try {
+                                                RealTimeMarkets.add(mMap.addMarker(markerOptions));
+                                            }catch (Exception e){
+
+                                            }
+                                        }
                                     }
                                 }
 
 
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
 
 
-                }
+                    }
 
-                BORRADOR = 1;
+                    BORRADOR = 1;
+
             }
 
             @Override
@@ -321,24 +331,23 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
+
     //metodo para agregar imagen en ves de marcador
-    private BitmapDescriptor vectorToBitmap(@DrawableRes int id, @ColorInt int color) {
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
         try {
-            Drawable vectorDrawable = ResourcesCompat.getDrawable(getResources(), id, null);
-            Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
-                    vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
-            vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            DrawableCompat.setTint(vectorDrawable, color);
-            vectorDrawable.draw(canvas);
-            return BitmapDescriptorFactory.fromBitmap(bitmap);
-        }catch (Exception e){
-            Log.e("error : ","en vectorToBitmap");
-                return null;
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+        } catch (Exception e) {
+            Log.e("error : ", "en vectorToBitmap");
+            return null;
 
         }
-
     }
+
 
 
 }
