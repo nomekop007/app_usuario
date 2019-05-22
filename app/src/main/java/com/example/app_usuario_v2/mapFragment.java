@@ -12,15 +12,11 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,7 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.example.app_usuario_v2.model.LineaTrasporte;
 import com.example.app_usuario_v2.model.Trasporte;
 import com.example.app_usuario_v2.model.coordenada;
@@ -49,9 +45,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.data.kml.KmlLayer;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class mapFragment extends Fragment implements OnMapReadyCallback {
@@ -70,6 +71,9 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
     private int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
     private int BORRADOR = 0;
+
+    //variable que se recibe el lineaFragment la cual tiene la ID de la linea de Trasporte elegida
+    private int ID = 100;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -100,11 +104,96 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
         myDatabase = FirebaseDatabase.getInstance().getReference();
 
+
         SolicitudDePermisoGPS();
         octenerLineasTrasporte();
         octenerTrasportes();
         octenerUbicacionEnTimpoReal();
+
+
+
     }
+
+    private void mostrarRecorrido(int id) {
+
+        switch (id){
+            case 100:
+
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_a, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            case 101:
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_b, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            case 102:
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_c, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            case 103:
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_d, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 104:
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_colin, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            case 105:
+                break;
+            case 106:
+                break;
+            case 107:
+                break;
+            case 108:
+                break;
+            case 109:
+                break;
+            case 110:
+                break;
+            case 111:
+                break;
+            case 112:
+                break;
+        }
+
+    }
+
+
+
 
     private void SolicitudDePermisoGPS() {
 
@@ -147,6 +236,11 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
         //boton de zoom
         uiSettings.setZoomControlsEnabled(true);
+
+        if (ID != 0){
+            Toast.makeText(getContext(), "Recorrido de Linea ID: " + ID, Toast.LENGTH_LONG).show();
+            mostrarRecorrido(ID);
+        }
 
         //que la aplicacion empieze con la ubicacion de talca
         LatLng Talca = new LatLng(-35.423244, -71.648483);
@@ -218,13 +312,19 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
                                     markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.icon));
 
-                                    markerOptions.snippet("Patente: " + trasporte.getPatente() + "\n"
-                                            + "Conductor: " + trasporte.getNombreConductor() + "\n "
-                                            + "calificacion : " + trasporte.getCalificacion());
+                                    String patente = trasporte.getPatente();
+                                    String conductor = trasporte.getNombreConductor();
+                                    String calificacion = trasporte.getCalificacion() + "";
+                                    int idLinea = trasporte.getIdLinea();
+
+                                    markerOptions.snippet("Patente: " + patente + "\n"
+                                            + "Conductor: " + conductor + "\n "
+                                            + "calificacion : " + calificacion);
+
 
                                     //extrae el nombre de la linea
                                     for (LineaTrasporte linea : lineasActuales) {
-                                        if (linea.getIdLinea() == trasporte.getIdLinea()) {
+                                        if (linea.getIdLinea() == idLinea) {
                                             markerOptions.title(linea.getNombreLinea());
                                         }
                                     }
@@ -242,7 +342,17 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
                                     if (latitud != 0 || longitud != 0) {
                                         try {
-                                            RealTimeMarkets.add(mMap.addMarker(markerOptions));
+
+                                            if (ID == 0) {
+                                                RealTimeMarkets.add(mMap.addMarker(markerOptions));
+                                            } else {
+                                                if (idLinea == ID) {
+                                                    RealTimeMarkets.add(mMap.addMarker(markerOptions));
+                                                }
+                                                //de lo contrario no se mostrara el marker
+
+                                            }
+
                                         } catch (Exception e) {
 
                                         }
