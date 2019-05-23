@@ -25,7 +25,7 @@ import com.example.app_usuario_v2.model.LineaTrasporte;
 
 import java.util.List;
 
-public class adaptadorLineas extends RecyclerView.Adapter<adaptadorLineas.lineaviewholder> {
+public class adaptadorLineas extends RecyclerView.Adapter<adaptadorLineas.lineaviewholder> implements View.OnClickListener {
 
 
     List<LineaTrasporte> lineas;
@@ -36,6 +36,9 @@ public class adaptadorLineas extends RecyclerView.Adapter<adaptadorLineas.lineav
     private mapFragment mapFragment;
     private LineaFragment lineaFragment;
 
+    //evento onClick
+    private View.OnClickListener Listener;
+
 
     public adaptadorLineas(List<LineaTrasporte> lineas) {
         this.lineas = lineas;
@@ -45,49 +48,8 @@ public class adaptadorLineas extends RecyclerView.Adapter<adaptadorLineas.lineav
     @Override
     public lineaviewholder onCreateViewHolder(@NonNull final ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.linea_card, viewGroup, false);
-        final lineaviewholder lineaviewholder = new lineaviewholder(v);
-
-
-        lineaFragment = new LineaFragment();
-        mapFragment = new mapFragment();
-
-
-
-
-        //onclick
-        lineaviewholder.itemContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // conf de los fragmentos
-                //fm = lineaFragment.getChildFragmentManager();
-                //ft = fm.beginTransaction();
-                //fm.beginTransaction().replace(R.id.mainActivity, mapFragment).commit();
-
-
-                //enviar parametros
-
-             //   Bundle bundle = new Bundle();
-               // bundle.putString("ID",lineas.get(lineaviewholder.getAdapterPosition()).getIdLinea()+"");
-               // mapFragment.setArguments(bundle);
-
-
-
-
-                Toast.makeText(viewGroup.getContext(),
-                        "ID Linea : "+lineas.get(lineaviewholder.getAdapterPosition()).getIdLinea(), Toast.LENGTH_LONG).show();
-
-                //extraer infromacion
-                Log.e("lineas : ", lineas.get(lineaviewholder.getAdapterPosition()).getIdLinea() + "");
-                Log.e("lineas : ", lineas.get(lineaviewholder.getAdapterPosition()).getNombreLinea() + "");
-                Log.e("lineas : ", lineas.get(lineaviewholder.getAdapterPosition()).getIdAgencia() + "");
-
-
-            }
-        });
-
-
-        return lineaviewholder;
+         v.setOnClickListener(this);
+        return new lineaviewholder(v);
     }
 
     @Override
@@ -105,6 +67,17 @@ public class adaptadorLineas extends RecyclerView.Adapter<adaptadorLineas.lineav
     @Override
     public int getItemCount() {
         return lineas.size();
+    }
+
+    public void setOnClickListener(View.OnClickListener listener) {
+        this.Listener = listener;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (Listener != null) {
+            Listener.onClick(v);
+        }
     }
 
     public static class lineaviewholder extends RecyclerView.ViewHolder {

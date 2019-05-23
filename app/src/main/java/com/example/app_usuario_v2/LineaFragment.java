@@ -33,9 +33,6 @@ import java.util.List;
  */
 
 
-
-
-
 public class LineaFragment extends Fragment {
 
 
@@ -52,6 +49,9 @@ public class LineaFragment extends Fragment {
 
     adaptadorLineas adaptador;
 
+    //elementos de fragmentos
+    private FragmentManager fm;
+    private FragmentTransaction ft;
 
 
     @Override
@@ -62,23 +62,48 @@ public class LineaFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_linea, container, false);
         myDatabase = FirebaseDatabase.getInstance().getReference();
 
+
+        fm = getFragmentManager();
+        ft = fm.beginTransaction();
+
+
         octenerAgencia();
         octenerLineasTrasporte();
 
         //por que no se mostraran?
-        for (Agencia a: AgenciaList) {
-            Log.e("agencia: ",a.getNombreAgencia());
-            Log.e("id: ",a.getIdAgencia());
+        for (Agencia a : AgenciaList) {
+            Log.e("agencia: ", a.getNombreAgencia());
+            Log.e("id: ", a.getIdAgencia());
         }
-        for (LineaTrasporte a: TrasporteList) {
-            Log.e("linea: ",a.getNombreLinea());
-            Log.e("id: ",a.getIdAgencia());
+        for (LineaTrasporte a : TrasporteList) {
+            Log.e("linea: ", a.getNombreLinea());
+            Log.e("id: ", a.getIdAgencia());
         }
 
 
         recyclerLineas = v.findViewById(R.id.list_recycler);
         recyclerLineas.setLayoutManager(new LinearLayoutManager(getContext()));
         adaptador = new adaptadorLineas(TrasporteList);
+
+        adaptador.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //sacar id del objeto seleccionado
+                int id = TrasporteList.get(recyclerLineas.getChildAdapterPosition(v)).getIdLinea();
+
+                mapFragment mapFragment = new mapFragment();
+
+                //enviar parametros
+                Bundle bundle = new Bundle();
+                bundle.putInt("ID", id);
+                mapFragment.setArguments(bundle);
+                fm.beginTransaction().replace(R.id.frag_linea, mapFragment).commit();
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            }
+        });
+
+
         recyclerLineas.setAdapter(adaptador);
         return v;
     }
@@ -92,9 +117,10 @@ public class LineaFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     LineaTrasporte linea = snapshot.getValue(LineaTrasporte.class);
 
-                    for (Agencia a: AgenciaList) {
-                        if (a.getIdAgencia().equals(linea.getIdAgencia())){
-                            linea.setIdAgencia(a.getNombreAgencia()+"");
+
+                    for (Agencia a : AgenciaList) {
+                        if (a.getIdAgencia().equals(linea.getIdAgencia())) {
+                            linea.setIdAgencia(a.getNombreAgencia() + "");
                         }
                     }
 
@@ -128,7 +154,6 @@ public class LineaFragment extends Fragment {
             }
         });
     }
-
 
 
 }

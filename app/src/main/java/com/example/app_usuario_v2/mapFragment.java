@@ -72,11 +72,14 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
     private int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
     private int BORRADOR = 0;
 
-    //variable que se recibe el lineaFragment la cual tiene la ID de la linea de Trasporte elegida
-    private int ID = 100;
+    //donde se guarda la ID recibida
+    private int ID = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+            //pregunta si hay linea seleccionada y extrae la ID en caso de que si
+       ID = getArguments() != null ? getArguments().getInt("ID") : 0;
 
         View v = inflater.inflate(R.layout.fragment_map, container, false);
         return v;
@@ -101,16 +104,12 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
             dialog.show();
         }
 
-
         myDatabase = FirebaseDatabase.getInstance().getReference();
-
 
         SolicitudDePermisoGPS();
         octenerLineasTrasporte();
         octenerTrasportes();
         octenerUbicacionEnTimpoReal();
-
-
 
     }
 
@@ -237,8 +236,8 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         //boton de zoom
         uiSettings.setZoomControlsEnabled(true);
 
+        //llama al metodo si es que hay una linea seleccionada
         if (ID != 0){
-            Toast.makeText(getContext(), "Recorrido de Linea ID: " + ID, Toast.LENGTH_LONG).show();
             mostrarRecorrido(ID);
         }
 
