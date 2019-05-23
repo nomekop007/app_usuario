@@ -43,11 +43,11 @@ public class LineaFragment extends Fragment {
 
     private DatabaseReference myDatabase;
 
-    RecyclerView recyclerLineas;
-    List<Agencia> AgenciaList = new ArrayList<>();
-    List<LineaTrasporte> TrasporteList = new ArrayList<>();
+    private List<Agencia> AgenciaList = new ArrayList<>();
+    private List<LineaTrasporte> TrasporteList = new ArrayList<>();
 
-    adaptadorLineas adaptador;
+    private RecyclerView recyclerLineas;
+    private adaptadorLineas adaptador;
 
     //elementos de fragmentos
     private FragmentManager fm;
@@ -62,24 +62,10 @@ public class LineaFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_linea, container, false);
         myDatabase = FirebaseDatabase.getInstance().getReference();
 
-
         fm = getFragmentManager();
         ft = fm.beginTransaction();
 
-
-        octenerAgencia();
         octenerLineasTrasporte();
-
-        //por que no se mostraran?
-        for (Agencia a : AgenciaList) {
-            Log.e("agencia: ", a.getNombreAgencia());
-            Log.e("id: ", a.getIdAgencia());
-        }
-        for (LineaTrasporte a : TrasporteList) {
-            Log.e("linea: ", a.getNombreLinea());
-            Log.e("id: ", a.getIdAgencia());
-        }
-
 
         recyclerLineas = v.findViewById(R.id.list_recycler);
         recyclerLineas.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -91,8 +77,10 @@ public class LineaFragment extends Fragment {
 
                 //sacar id del objeto seleccionado
                 int id = TrasporteList.get(recyclerLineas.getChildAdapterPosition(v)).getIdLinea();
-
+                String linea = TrasporteList.get(recyclerLineas.getChildAdapterPosition(v)).getNombreLinea();
                 mapFragment mapFragment = new mapFragment();
+
+                Toast.makeText(getContext(),"recorrido "+linea , Toast.LENGTH_SHORT).show();
 
                 //enviar parametros
                 Bundle bundle = new Bundle();
@@ -102,7 +90,6 @@ public class LineaFragment extends Fragment {
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             }
         });
-
 
         recyclerLineas.setAdapter(adaptador);
         return v;
@@ -117,12 +104,21 @@ public class LineaFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     LineaTrasporte linea = snapshot.getValue(LineaTrasporte.class);
 
-
+                    /*
                     for (Agencia a : AgenciaList) {
                         if (a.getIdAgencia().equals(linea.getIdAgencia())) {
                             linea.setIdAgencia(a.getNombreAgencia() + "");
                         }
+                    }*/
+
+                    if (linea.getIdAgencia().equals("A1")) {
+                        linea.setIdAgencia("Taxutal");
+                    } else if (linea.getIdAgencia().equals("A2")) {
+                        linea.setIdAgencia("Sotratal");
+                    } else {
+                        linea.setIdAgencia("Abate Molina");
                     }
+
 
                     TrasporteList.add(linea);
 

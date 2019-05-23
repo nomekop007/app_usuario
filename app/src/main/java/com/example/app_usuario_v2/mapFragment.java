@@ -172,20 +172,84 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
                 break;
             case 105:
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_1, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 106:
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_2, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 107:
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_4, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 108:
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_6, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 109:
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_3, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 110:
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_3b, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 111:
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_5, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 112:
+                try {
+                    KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.linea_7, getApplicationContext());
+                    kmlLayer.addLayerToMap();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
 
@@ -243,7 +307,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
         //que la aplicacion empieze con la ubicacion de talca
         LatLng Talca = new LatLng(-35.423244, -71.648483);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Talca, 13), 200, null);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Talca, 13), 10, null);
 
         //metodo para ordenar informacion de los marcadores
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
