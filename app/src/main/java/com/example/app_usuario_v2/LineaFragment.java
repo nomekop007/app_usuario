@@ -1,6 +1,7 @@
 package com.example.app_usuario_v2;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -53,6 +54,9 @@ public class LineaFragment extends Fragment {
     private FragmentManager fm;
     private FragmentTransaction ft;
 
+    //declarar circulo de cargando
+    private ProgressDialog progressDialog;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +65,9 @@ public class LineaFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_linea, container, false);
         myDatabase = FirebaseDatabase.getInstance().getReference();
+
+        //iniciar progressDialig
+        progressDialog = new ProgressDialog(getContext());
 
         fm = getFragmentManager();
         ft = fm.beginTransaction();
@@ -80,11 +87,12 @@ public class LineaFragment extends Fragment {
                 String linea = TrasporteList.get(recyclerLineas.getChildAdapterPosition(v)).getNombreLinea();
                 mapFragment mapFragment = new mapFragment();
 
-                Toast.makeText(getContext(),"recorrido "+linea , Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(getContext(),"recorrido "+linea , Toast.LENGTH_SHORT).show();
 
                 //enviar parametros
                 Bundle bundle = new Bundle();
                 bundle.putInt("ID", id);
+                bundle.putString("linea", linea);
                 mapFragment.setArguments(bundle);
                 fm.beginTransaction().replace(R.id.frag_linea, mapFragment).commit();
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -96,6 +104,9 @@ public class LineaFragment extends Fragment {
     }
 
     private void octenerLineasTrasporte() {
+
+        progressDialog.setMessage("cargando lista...");
+        progressDialog.show();
 
         myDatabase.child("lineaTrasporte").addValueEventListener(new ValueEventListener() {
             @Override
@@ -127,12 +138,16 @@ public class LineaFragment extends Fragment {
             }
 
 
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
+
         });
+        progressDialog.dismiss();
     }
 
+    /*
     private void octenerAgencia() {
         myDatabase.child("agencia").addValueEventListener(new ValueEventListener() {
             @Override
@@ -149,7 +164,7 @@ public class LineaFragment extends Fragment {
 
             }
         });
-    }
+    }*/
 
 
 }

@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -22,9 +23,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.app_usuario_v2.model.LineaTrasporte;
 import com.example.app_usuario_v2.model.Trasporte;
 import com.example.app_usuario_v2.model.coordenada;
@@ -52,6 +57,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static android.view.View.VISIBLE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 
@@ -59,6 +65,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private DatabaseReference myDatabase;
+    private View v;
 
     //arreglo de puntos para evitar que se llene de puntos el mapa
     private ArrayList<Marker> RealTimeMarkets = new ArrayList<>();
@@ -72,16 +79,29 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
     private int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
     private int BORRADOR = 0;
 
-    //donde se guarda la ID recibida
+    //donde se guarda los datos de la linea recibida
     private int ID = 0;
+
+
+    //vetana de mapFragment
+    private RelativeLayout ventana;
+    private TextView nombreLinea;
+    private View markers = null;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-            //pregunta si hay linea seleccionada y extrae la ID en caso de que si
-       ID = getArguments() != null ? getArguments().getInt("ID") : 0;
 
-        View v = inflater.inflate(R.layout.fragment_map, container, false);
+        v = inflater.inflate(R.layout.fragment_map, container, false);
+
+
+        //inicar venta en invisible
+        ventana = v.findViewById(R.id.ventana);
+        nombreLinea = v.findViewById(R.id.v_linea);
+
+        ventana.setVisibility(v.INVISIBLE);
+        Leyenda();
         return v;
     }
 
@@ -104,6 +124,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
             dialog.show();
         }
 
+
         myDatabase = FirebaseDatabase.getInstance().getReference();
 
         SolicitudDePermisoGPS();
@@ -113,9 +134,124 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        //se modifica el tipo de mapa a mostrar
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+
+
+        //habilita algunas funciones que bienen desabilitadad en google maps
+        UiSettings uiSettings = mMap.getUiSettings();
+
+        //boton de zoom
+        uiSettings.setZoomControlsEnabled(true);
+
+        //llama al metodo si es que hay una linea seleccionada
+        if (ID != 0) {
+            mostrarRecorrido(ID);
+
+        }
+
+        //que la aplicacion empieze con la ubicacion de talca
+        LatLng Talca = new LatLng(-35.423244, -71.648483);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Talca, 13), 10, null);
+
+
+
+        // click ventana de informacion
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                // Determine what marker is clicked by using the argument passed in
+                // for example, marker.getTitle() or marker.getSnippet().
+                // Code here for navigating to fragment activity.
+
+
+
+                Intent intent = new Intent(getContext(), CalificarActivity.class);
+                intent.putExtra("descripcion",marker.getSnippet());
+                startActivity(intent);
+            }
+        });
+
+        //metodo para ordenar informacion de los marcadores
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            @Override
+            public View getInfoWindow(Marker arg0) {
+
+                return null;
+            }
+
+
+            @Override
+            public View getInfoContents(Marker marker) {
+
+               /* LinearLayout info = new LinearLayout(getContext());
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(getContext());
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(getContext());
+                snippet.setTextColor(Color.GRAY);
+                snippet.setText(marker.getSnippet());
+
+                info.addView(title);
+                info.addView(snippet);
+
+                return info;*/
+
+
+
+                if (markers == null) {
+                    markers = getLayoutInflater().inflate(R.layout.marker, null);
+                }
+
+
+                TextView titulo = (TextView) markers.findViewById(R.id.titulos);
+                TextView descripcion = markers.findViewById(R.id.sniper);
+                ImageView img = (ImageView) markers.findViewById(R.id.iconos);
+
+                img.setImageResource(R.drawable.user);
+                titulo.setText(marker.getTitle());
+                descripcion.setText(marker.getSnippet());
+                return (markers);
+
+            }
+        });
+    }
+
+
+    private void Leyenda() {
+        //pregunta si hay linea seleccionada y extrae la ID en caso de que si
+        if (getArguments() != null) {
+            ID = getArguments().getInt("ID");
+            nombreLinea.setText("Recorrido : " + getArguments().getString("linea"));
+            ventana.setVisibility(v.VISIBLE);
+        }
+
+        // ID = getArguments() != null ? getArguments().getInt("ID") : 0;
+
+
+    }
+
     private void mostrarRecorrido(int id) {
 
-        switch (id){
+        switch (id) {
             case 100:
 
                 try {
@@ -256,8 +392,6 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-
-
     private void SolicitudDePermisoGPS() {
 
         //pregunta si el permiso no esta dado
@@ -275,70 +409,6 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         }
 
 
-    }
-
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        //se modifica el tipo de mapa a mostrar
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mMap.setMyLocationEnabled(true);
-
-
-        //habilita algunas funciones que bienen desabilitadad en google maps
-        UiSettings uiSettings = mMap.getUiSettings();
-
-        //boton de zoom
-        uiSettings.setZoomControlsEnabled(true);
-
-        //llama al metodo si es que hay una linea seleccionada
-        if (ID != 0){
-            mostrarRecorrido(ID);
-        }
-
-        //que la aplicacion empieze con la ubicacion de talca
-        LatLng Talca = new LatLng(-35.423244, -71.648483);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Talca, 13), 10, null);
-
-        //metodo para ordenar informacion de los marcadores
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-            @Override
-            public View getInfoWindow(Marker arg0) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-
-                LinearLayout info = new LinearLayout(getContext());
-                info.setOrientation(LinearLayout.VERTICAL);
-
-                TextView title = new TextView(getContext());
-                title.setTextColor(Color.BLACK);
-                title.setGravity(Gravity.CENTER);
-                title.setTypeface(null, Typeface.BOLD);
-                title.setText(marker.getTitle());
-
-                TextView snippet = new TextView(getContext());
-                snippet.setTextColor(Color.GRAY);
-                snippet.setText(marker.getSnippet());
-
-                info.addView(title);
-                info.addView(snippet);
-
-                return info;
-            }
-        });
     }
 
 
@@ -373,6 +443,8 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                                     MarkerOptions markerOptions = new MarkerOptions();
                                     markerOptions.position(new LatLng(latitud, longitud));
 
+
+
                                     markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.icon));
 
                                     String patente = trasporte.getPatente();
@@ -380,10 +452,10 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                                     String calificacion = trasporte.getCalificacion() + "";
                                     int idLinea = trasporte.getIdLinea();
 
+
                                     markerOptions.snippet("Patente: " + patente + "\n"
                                             + "Conductor: " + conductor + "\n "
-                                            + "calificacion : " + calificacion);
-
+                                            + "calificacion: " + calificacion);
 
                                     //extrae el nombre de la linea
                                     for (LineaTrasporte linea : lineasActuales) {
