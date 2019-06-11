@@ -2,7 +2,7 @@ package com.example.app_usuario_v2.model;
 
 public class Trasporte {
 
-    private int calificacion;
+    private float calificacion;
     private String contraseña;
     private int edadConductor;
     private boolean estado;
@@ -16,11 +16,11 @@ public class Trasporte {
 
     }
 
-    public int getCalificacion() {
+    public float getCalificacion() {
         return calificacion;
     }
 
-    public void setCalificacion(int calificacion) {
+    public void setCalificacion(float calificacion) {
         this.calificacion = calificacion;
     }
 

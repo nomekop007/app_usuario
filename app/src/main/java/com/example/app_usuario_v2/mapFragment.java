@@ -181,6 +181,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                 Intent intent = new Intent(getContext(), CalificarActivity.class);
                 intent.putExtra("descripcion",marker.getSnippet());
                 startActivity(intent);
+
             }
         });
 

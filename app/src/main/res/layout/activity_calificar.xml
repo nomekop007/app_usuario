@@ -10,7 +10,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/calificarActivity">
 
 
         <android.support.v7.widget.Toolbar
@@ -57,8 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                    android:layout_marginLeft="20dp"
-                    android:numStars="5"
-                    android:stepSize=".5" />
+                    android:numStars="5" />
 
                 <Button
                     android:id="@+id/btn_calificar"
@@ -98,6 +98,7 @@
                     android:layout_height="wrap_content"
                     android:text="Enviar Reclamo "
                     android:layout_margin="20dp"
+                    android:onClick="Reclamar"
                     android:textColor="@color/colorBlanco"
                     android:background="@color/colorPrimary"
                     />
