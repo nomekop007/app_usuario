@@ -4,7 +4,8 @@ public class Calificacion {
     private String idCalificacion;
     private float calificacion;
     private String idUsuario;
-    private String idConductor;
+    private String idTrasporte;
+    private String fechaHora;
 
 
     public Calificacion() {
@@ -35,11 +36,19 @@ public class Calificacion {
         this.idUsuario = idUsuario;
     }
 
-    public String getIdConductor() {
-        return idConductor;
+    public String getIdTrasporte() {
+        return idTrasporte;
     }
 
-    public void setIdConductor(String idConductor) {
-        this.idConductor = idConductor;
+    public void setIdTrasporte(String idTrasporte) {
+        this.idTrasporte = idTrasporte;
+    }
+
+    public String getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(String fechaHora) {
+        this.fechaHora = fechaHora;
     }
 }

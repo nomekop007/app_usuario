@@ -6,11 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.app_usuario_v2.model.Calificacion;
 import com.example.app_usuario_v2.model.Reclamo;
 import com.example.app_usuario_v2.model.Trasporte;
 import com.example.app_usuario_v2.model.Usuario;
@@ -33,30 +35,31 @@ public class CalificarActivity extends AppCompatActivity {
 
     private android.support.v7.widget.Toolbar toolbar;
     private RatingBar ratingBar;
-    private TextView patente,nombre,califcacion;
+    private TextView patente, nombre, calificacion;
     private EditText editReclamo;
+    private Button btn;
     private String IDTrasporte = "";
     private Trasporte trasporte;
+
 
     private DatabaseReference myDatabase = FirebaseDatabase.getInstance().getReference();
     //hacer referencia a la base de datos de firebase
 
 
-    //llamar al posible usuario
-    private FirebaseAuth firebaseAuth;
 
+    //llamar a Usuario
+   private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calificar);
 
-        firebaseAuth = FirebaseAuth.getInstance();
         ratingBar = findViewById(R.id.ratingBar);
         patente = findViewById(R.id.t2_patente);
         nombre = findViewById(R.id.t2_nombre);
-        califcacion = findViewById(R.id.t2_califcacion);
-
+        calificacion = findViewById(R.id.t2_califcacion);
+        btn = findViewById(R.id.btn_calificar);
         //mostrar descripcion
         Intent i = getIntent();
         IDTrasporte = i.getStringExtra("idTrasporte");
@@ -64,9 +67,42 @@ public class CalificarActivity extends AppCompatActivity {
 
         ConfiguracionToolbar();
         BuscarMostrarTrasporte();
+        ConfigDeCalificacion();
     }
 
 
+    private void ConfigDeCalificacion() {
+
+        myDatabase.child("calificacion").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                    //extraer fecha y hora del sistema
+                    long date = System.currentTimeMillis();
+                    SimpleDateFormat d = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+                    String fechaHora = d.format(date);
+
+
+                    Calificacion cal = snapshot.getValue(Calificacion.class);
+
+                    if (cal.getIdTrasporte().equals(trasporte.getIdTrasporte())
+                    &&  cal.getIdUsuario().equals(user.getUid())){
+
+                    ratingBar.setVisibility(View.INVISIBLE);
+                    btn.setVisibility(View.INVISIBLE);
+
+                   }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
 
     private void ConfiguracionToolbar() {
         toolbar = findViewById(R.id.toolbar);
@@ -87,12 +123,12 @@ public class CalificarActivity extends AppCompatActivity {
 
                     Trasporte tr = snapshot.getValue(Trasporte.class);
 
-                    if (tr.getIdTrasporte().equals(IDTrasporte)){
+                    if (tr.getIdTrasporte().equals(IDTrasporte)) {
                         trasporte = tr;
 
-                    patente.setText("Patente: "+tr.getPatente());
-                    nombre.setText("Nombre Conductor :"+tr.getNombreConductor());
-                    califcacion.setText("Califcacion :"+tr.getCalificacion());
+                        patente.setText("Patente: " + tr.getPatente());
+                        nombre.setText("Nombre Conductor :" + tr.getNombreConductor());
+                        calificacion.setText("Calificacion :" + tr.getCalificacion());
                     }
                 }
             }
@@ -120,22 +156,35 @@ public class CalificarActivity extends AppCompatActivity {
     public void CalificarConductor(View view) {
 
 
-        float calificacionTotal = trasporte.getCalificacion();
         float calificacionUsuario = ratingBar.getRating();
 
-       trasporte.setCalificacion((calificacionTotal+calificacionUsuario)/2);
+        if (calificacionUsuario > 0){
 
-       /*
-        myDatabase.child("trasporte").child(trasporte.getIdTrasporte()).setValue(trasporte);
-        */
+            //extraer fecha y hora del sistema
+            long date = System.currentTimeMillis();
+            SimpleDateFormat d = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+            String fechaHora = d.format(date);
 
-        Toast.makeText(getApplicationContext(), "calificado con "
-                +ratingBar.getRating()+" starts al conductor "+trasporte.getNombreConductor(), Toast.LENGTH_LONG).show();
+            Calificacion calificacion = new Calificacion();
+
+            calificacion.setIdCalificacion(UUID.randomUUID().toString());
+            calificacion.setCalificacion(calificacionUsuario);
+            calificacion.setIdUsuario(user.getUid());
+            calificacion.setIdTrasporte(trasporte.getIdTrasporte());
+            calificacion.setFechaHora(fechaHora);
+
+            //crear calificacion
+            myDatabase.child("calificacion").child(calificacion.getIdCalificacion()).setValue(calificacion);
+            Toast.makeText(getApplicationContext(), "calificado con "
+                    + ratingBar.getRating() + " starts al conductor " + trasporte.getNombreConductor(), Toast.LENGTH_LONG).show();
+
+            finish();
 
 
-        //pendiente
+        }else {
+            Toast.makeText(getApplicationContext(), "ingrese calificacion!", Toast.LENGTH_LONG).show();
+        }
 
-        finish();
 
     }
 
@@ -154,8 +203,7 @@ public class CalificarActivity extends AppCompatActivity {
             String fechaHora = d.format(date);
             Log.e("ms : ", fechaHora);
 
-            //llamar a Usuario
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
 
 
             Reclamo reclamo = new Reclamo();
