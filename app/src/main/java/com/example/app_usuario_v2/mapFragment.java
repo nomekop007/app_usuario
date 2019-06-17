@@ -88,7 +88,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
     //vetana de mapFragment
     private RelativeLayout ventana;
     private TextView nombreLinea;
-    private View markers = null;
+    private View markerLayout = null;
 
 
     @Override
@@ -181,41 +181,36 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        //metodo para ordenar informacion de los marcadores
+        //metodo que llama a la ventana que muestra la info del trasporte
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
             @Override
             public View getInfoWindow(Marker arg0) {
-
                 return null;
             }
-
-
             @Override
             public View getInfoContents(Marker marker) {
 
-                if (markers == null) {
-                    markers = getLayoutInflater().inflate(R.layout.marker, null);
+                if (markerLayout == null) {
+                    markerLayout = getLayoutInflater().inflate(R.layout.marker, null);
                 }
 
 
                 for (Trasporte trasporte : tmpRealTimeTrasportes) {
+
                     //busca el trasporte mediate la descripcion del marker seleccionado
-                    int resultado = marker.getSnippet().indexOf(trasporte.getIdLinea());
-                    if (resultado != -1) {
+                    if (marker.getSnippet().equals(trasporte.getIdTrasporte())) {
 
 
-                        TextView titulo = markers.findViewById(R.id.titulos);
-                        TextView patente = markers.findViewById(R.id.t_Patente);
-                        TextView nomConductor = markers.findViewById(R.id.t_Conductor);
-                        TextView calificacion = markers.findViewById(R.id.t_calificacion);
-                        ImageView img = markers.findViewById(R.id.iconos);
-                        RatingBar ratingBar = markers.findViewById(R.id.ratingBar);
+                        TextView titulo = markerLayout.findViewById(R.id.titulos);
+                        TextView patente = markerLayout.findViewById(R.id.t_Patente);
+                        TextView nomConductor = markerLayout.findViewById(R.id.t_Conductor);
+                        TextView calificacion = markerLayout.findViewById(R.id.t_calificacion);
+                        ImageView img = markerLayout.findViewById(R.id.iconos);
+                        RatingBar ratingBar = markerLayout.findViewById(R.id.ratingBar);
 
 
-                        ratingBar.setRating(trasporte.getCalificacion());
-
-                        Glide.with(markers)
+                        Glide.with(markerLayout)
                                 .load(trasporte.getFotoConductorUrl())
                                 .fitCenter()
                                 .centerCrop()
@@ -226,11 +221,13 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(img);
 
+
                         titulo.setText(marker.getTitle());
+                        ratingBar.setRating(trasporte.getCalificacion());
                         patente.setText("Patente: " + trasporte.getPatente());
                         nomConductor.setText("Conductor: " + trasporte.getNombreConductor());
                         calificacion.setText("Calificacion: " + trasporte.getCalificacion());
-                        return (markers);
+                        return (markerLayout);
                     }
                 }
 
@@ -488,10 +485,12 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
                                         }
                                     }
+
+
+
+
                                 }
                             }
-
-
                         }
 
                         @Override
