@@ -196,7 +196,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 //mostrar los datos del perfil en el header del drawer
 
                 //informacion del usuario que se muestra en el drawer header
-                ((TextView) header.findViewById(R.id.usuario)).setText(perfil.getNombreUsuario() + "");
                 ((TextView) header.findViewById(R.id.nombre)).setText(perfil.getNombreCompleto() + "");
                 ((TextView) header.findViewById(R.id.gmail)).setText(perfil.getCorreoElectronico() + "");
 

@@ -470,9 +470,21 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                                     if (BORRADOR == 1) {
 
                                         for (Marker marker : RealTimeMarkets) {
+
+
+                                           /*
                                             if (marker.getSnippet().equals(markerOptions.getSnippet())) {
                                                 marker.remove();
                                             }
+                                            */
+                                            int resultado = marker.getSnippet().indexOf(patente);
+                                            if (resultado != -1) {
+                                                marker.remove();
+                                            }
+
+
+
+
                                         }
                                     }
 

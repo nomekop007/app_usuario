@@ -138,10 +138,9 @@ public class RegistrarActivity extends AppCompatActivity {
                                 u.setNombreCompleto(nombre.getEditText().getText().toString().trim());
                                 u.setNombreUsuario(usuario.getEditText().getText().toString().trim());
                                 u.setDireccion(direccion.getEditText().getText().toString().trim());
-                                u.setTipoCuenta("free");
                                 u.setCorreoElectronico(user.getEmail());
-                                //corregir seguridad a futuro
-                                u.setContraseña(pass);
+
+                                u.setContraseña("*********");
 
                                 //crea el usuario en la base de datos de firebase realtime
                                 mydatabasereference.child("usuario").child(user.getUid()).setValue(u);

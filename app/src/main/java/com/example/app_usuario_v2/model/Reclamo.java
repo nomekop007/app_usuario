@@ -3,7 +3,7 @@ package com.example.app_usuario_v2.model;
 public class Reclamo {
 
     private  String idReclamo;
-    private String idUsuario;
+    private String correoUsuario;
     private String idTrasporte;
     private String fechaHora;
     private String reclamo;
@@ -20,12 +20,12 @@ public class Reclamo {
         this.idReclamo = idReclamo;
     }
 
-    public String getIdUsuario() {
-        return idUsuario;
+    public String getCorreoUsuario() {
+        return correoUsuario;
     }
 
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setCorreoUsuario(String correoUsuario) {
+        this.correoUsuario = correoUsuario;
     }
 
     public String getIdTrasporte() {

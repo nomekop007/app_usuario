@@ -8,7 +8,6 @@ public class Usuario {
     private String nombreCompleto;
     private String correoElectronico;
     private String direccion;
-    private String tipoCuenta;
 
     public Usuario() {
 
@@ -60,13 +59,5 @@ public class Usuario {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
-    }
-
-    public String getTipoCuenta() {
-        return tipoCuenta;
-    }
-
-    public void setTipoCuenta(String tipoCuenta) {
-        this.tipoCuenta = tipoCuenta;
     }
 }

@@ -37,7 +37,6 @@ public class CalificarActivity extends AppCompatActivity {
     private EditText editReclamo;
     private String TrasporteDescripcion = "";
     private Trasporte trasporte;
-    private Reclamo reclamo;
 
     private DatabaseReference myDatabase = FirebaseDatabase.getInstance().getReference();
     //hacer referencia a la base de datos de firebase
@@ -127,25 +126,29 @@ public class CalificarActivity extends AppCompatActivity {
         finish();
     }
 
-    public void Calificar(View view) {
+    public void CalificarConductor(View view) {
 
-            /*
+
         float calificacionTotal = trasporte.getCalificacion();
         float calificacionUsuario = ratingBar.getRating();
 
        trasporte.setCalificacion((calificacionTotal+calificacionUsuario)/2);
 
+       /*
         myDatabase.child("trasporte").child(trasporte.getIdTrasporte()).setValue(trasporte);
+        */
+
         Toast.makeText(getApplicationContext(), "calificado con "
                 +ratingBar.getRating()+" starts al conductor "+trasporte.getNombreConductor(), Toast.LENGTH_LONG).show();
-            */
+
 
         //pendiente
 
+        finish();
 
     }
 
-    public void Reclamar(View view) {
+    public void RealizarReclamo(View view) {
 
         editReclamo = findViewById(R.id.edit_reclamo);
         String ElReclamo = editReclamo.getText().toString();
@@ -170,7 +173,8 @@ public class CalificarActivity extends AppCompatActivity {
             reclamo.setReclamo(ElReclamo);
             reclamo.setIdTrasporte(trasporte.getIdTrasporte());
             reclamo.setFechaHora(fechaHora);
-            reclamo.setIdUsuario(user.getEmail());
+            reclamo.setCorreoUsuario(user.getEmail());
+
 
             //crear reclamo
             myDatabase.child("reclamo").child(reclamo.getIdReclamo()).setValue(reclamo);
