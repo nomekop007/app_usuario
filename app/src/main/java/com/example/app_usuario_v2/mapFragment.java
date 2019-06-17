@@ -12,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,6 +31,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.app_usuario_v2.model.LineaTrasporte;
 import com.example.app_usuario_v2.model.Trasporte;
 import com.example.app_usuario_v2.model.coordenada;
@@ -81,7 +84,6 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
     //donde se guarda los datos de la linea recibida
     private int ID = 0;
-
 
     //vetana de mapFragment
     private RelativeLayout ventana;
@@ -167,19 +169,13 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Talca, 13), 10, null);
 
 
-
-        // click ventana de informacion
+        // click ventana de informacion que redirecciona a ventana
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                // Determine what marker is clicked by using the argument passed in
-                // for example, marker.getTitle() or marker.getSnippet().
-                // Code here for navigating to fragment activity.
-
-
 
                 Intent intent = new Intent(getContext(), CalificarActivity.class);
-                intent.putExtra("descripcion",marker.getSnippet());
+                intent.putExtra("idTrasporte", marker.getSnippet());
                 startActivity(intent);
 
             }
@@ -198,40 +194,48 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public View getInfoContents(Marker marker) {
 
-               /* LinearLayout info = new LinearLayout(getContext());
-                info.setOrientation(LinearLayout.VERTICAL);
-
-                TextView title = new TextView(getContext());
-                title.setTextColor(Color.BLACK);
-                title.setGravity(Gravity.CENTER);
-                title.setTypeface(null, Typeface.BOLD);
-                title.setText(marker.getTitle());
-
-                TextView snippet = new TextView(getContext());
-                snippet.setTextColor(Color.GRAY);
-                snippet.setText(marker.getSnippet());
-
-                info.addView(title);
-                info.addView(snippet);
-
-                return info;*/
-
-
-
                 if (markers == null) {
                     markers = getLayoutInflater().inflate(R.layout.marker, null);
                 }
 
 
-                TextView titulo = (TextView) markers.findViewById(R.id.titulos);
-                TextView descripcion = markers.findViewById(R.id.sniper);
-                ImageView img = (ImageView) markers.findViewById(R.id.iconos);
+                for (Trasporte trasporte : tmpRealTimeTrasportes) {
+                    //busca el trasporte mediate la descripcion del marker seleccionado
+                    int resultado = marker.getSnippet().indexOf(trasporte.getIdLinea());
+                    if (resultado != -1) {
 
-                img.setImageResource(R.drawable.user);
-                titulo.setText(marker.getTitle());
-                descripcion.setText(marker.getSnippet());
-                return (markers);
 
+                        TextView titulo = markers.findViewById(R.id.titulos);
+                        TextView patente = markers.findViewById(R.id.t_Patente);
+                        TextView nomConductor = markers.findViewById(R.id.t_Conductor);
+                        TextView calificacion = markers.findViewById(R.id.t_calificacion);
+                        ImageView img = markers.findViewById(R.id.iconos);
+                        RatingBar ratingBar = markers.findViewById(R.id.ratingBar);
+
+
+                        ratingBar.setRating(trasporte.getCalificacion());
+
+                        Glide.with(markers)
+                                .load(trasporte.getFotoConductorUrl())
+                                .fitCenter()
+                                .centerCrop()
+                                .circleCrop()
+                                .error(R.drawable.error)
+                                .placeholder(R.drawable.cargando)
+                                .thumbnail(0.5f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(img);
+
+                        titulo.setText(marker.getTitle());
+                        patente.setText("Patente: " + trasporte.getPatente());
+                        nomConductor.setText("Conductor: " + trasporte.getNombreConductor());
+                        calificacion.setText("Calificacion: " + trasporte.getCalificacion());
+                        return (markers);
+                    }
+                }
+
+
+                return null;
             }
         });
     }
@@ -442,25 +446,15 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                                 if (trasporte.getIdTrasporte().equals(cord.getIdTrasporte())) {
 
                                     MarkerOptions markerOptions = new MarkerOptions();
+
                                     markerOptions.position(new LatLng(latitud, longitud));
-
-
-
                                     markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.icon));
-
-                                    String patente = trasporte.getPatente();
-                                    String conductor = trasporte.getNombreConductor();
-                                    String calificacion = trasporte.getCalificacion() + "";
-                                    int idLinea = trasporte.getIdLinea();
+                                    markerOptions.snippet(trasporte.getIdTrasporte());
 
 
-                                    markerOptions.snippet("Patente: " + patente + "\n"
-                                            + "Conductor: " + conductor + "\n "
-                                            + "calificacion: " + calificacion);
-
-                                    //extrae el nombre de la linea
+                                    //extrae el nombre de la linea y la coloca como titulo
                                     for (LineaTrasporte linea : lineasActuales) {
-                                        if (linea.getIdLinea() == idLinea) {
+                                        if (linea.getIdLinea() == trasporte.getIdLinea()) {
                                             markerOptions.title(linea.getNombreLinea());
                                         }
                                     }
@@ -468,37 +462,26 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
                                     //borra la coordenada antiguo y la remplaza por la nueva
                                     if (BORRADOR == 1) {
-
                                         for (Marker marker : RealTimeMarkets) {
-
-
-                                           /*
-                                            if (marker.getSnippet().equals(markerOptions.getSnippet())) {
+                                            if (marker.getSnippet().equals(trasporte.getIdTrasporte())) {
                                                 marker.remove();
                                             }
-                                            */
-                                            int resultado = marker.getSnippet().indexOf(patente);
-                                            if (resultado != -1) {
-                                                marker.remove();
-                                            }
-
-
-
-
                                         }
                                     }
 
+
+
+                                    //si las coordenadas son 0 quita el trasporte del mapa
                                     if (latitud != 0 || longitud != 0) {
                                         try {
 
                                             if (ID == 0) {
                                                 RealTimeMarkets.add(mMap.addMarker(markerOptions));
                                             } else {
-                                                if (idLinea == ID) {
+                                                if (trasporte.getIdLinea() == ID) {
                                                     RealTimeMarkets.add(mMap.addMarker(markerOptions));
                                                 }
                                                 //de lo contrario no se mostrara el marker
-
                                             }
 
                                         } catch (Exception e) {

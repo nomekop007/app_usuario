@@ -33,9 +33,9 @@ public class CalificarActivity extends AppCompatActivity {
 
     private android.support.v7.widget.Toolbar toolbar;
     private RatingBar ratingBar;
-    private TextView descripcion;
+    private TextView patente,nombre,califcacion;
     private EditText editReclamo;
-    private String TrasporteDescripcion = "";
+    private String IDTrasporte = "";
     private Trasporte trasporte;
 
     private DatabaseReference myDatabase = FirebaseDatabase.getInstance().getReference();
@@ -50,26 +50,23 @@ public class CalificarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calificar);
+
         firebaseAuth = FirebaseAuth.getInstance();
-
-        ConfiguracionToolbar();
-        ConfigurarRatingBar();
-        BuscarTrasporte();
-    }
-
-    private void ConfigurarRatingBar() {
         ratingBar = findViewById(R.id.ratingBar);
-        descripcion = findViewById(R.id.txt_Descripcion);
-
+        patente = findViewById(R.id.t2_patente);
+        nombre = findViewById(R.id.t2_nombre);
+        califcacion = findViewById(R.id.t2_califcacion);
 
         //mostrar descripcion
         Intent i = getIntent();
-        String descr = i.getStringExtra("descripcion");
-        TrasporteDescripcion = descr;
-        descripcion.setText(descr);
+        IDTrasporte = i.getStringExtra("idTrasporte");
 
 
+        ConfiguracionToolbar();
+        BuscarMostrarTrasporte();
     }
+
+
 
     private void ConfiguracionToolbar() {
         toolbar = findViewById(R.id.toolbar);
@@ -80,7 +77,7 @@ public class CalificarActivity extends AppCompatActivity {
     }
 
 
-    private void BuscarTrasporte() {
+    private void BuscarMostrarTrasporte() {
 
         myDatabase.child("trasporte").addValueEventListener(new ValueEventListener() {
             @Override
@@ -90,20 +87,14 @@ public class CalificarActivity extends AppCompatActivity {
 
                     Trasporte tr = snapshot.getValue(Trasporte.class);
 
-
-                    //si no es -1 significa que lo encontro
-                    String patente = tr.getPatente();
-                    int resultado = TrasporteDescripcion.indexOf(patente);
-                    if (resultado != -1) {
-
-                        //guarda el trasporte encontrado
+                    if (tr.getIdTrasporte().equals(IDTrasporte)){
                         trasporte = tr;
-                        Log.e("funciono ", trasporte.getNombreConductor());
+
+                    patente.setText("Patente: "+tr.getPatente());
+                    nombre.setText("Nombre Conductor :"+tr.getNombreConductor());
+                    califcacion.setText("Califcacion :"+tr.getCalificacion());
                     }
-
                 }
-
-
             }
 
             @Override
