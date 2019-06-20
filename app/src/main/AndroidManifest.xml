@@ -21,7 +21,9 @@
         android:roundIcon="@drawable/fondo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CalificarActivity"></activity>
+        <activity android:name=".CalificarActivity"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".RegistrarActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

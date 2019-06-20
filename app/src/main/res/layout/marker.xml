@@ -12,7 +12,7 @@
         android:id="@+id/iconos"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/circulo"
+        android:src="@drawable/circulo2"
         android:layout_margin="8dp"/>
 
     <LinearLayout

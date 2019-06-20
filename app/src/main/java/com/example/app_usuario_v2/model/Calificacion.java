@@ -5,7 +5,6 @@ public class Calificacion {
     private float calificacion;
     private String idUsuario;
     private String idTrasporte;
-    private String fechaHora;
 
 
     public Calificacion() {
@@ -44,11 +43,5 @@ public class Calificacion {
         this.idTrasporte = idTrasporte;
     }
 
-    public String getFechaHora() {
-        return fechaHora;
-    }
 
-    public void setFechaHora(String fechaHora) {
-        this.fechaHora = fechaHora;
-    }
 }
