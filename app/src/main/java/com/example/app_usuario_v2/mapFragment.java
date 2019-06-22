@@ -176,6 +176,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
                 Intent intent = new Intent(getContext(), CalificarActivity.class);
                 intent.putExtra("idTrasporte", marker.getSnippet());
+                intent.putExtra("lineaTrasporte", marker.getTitle());
                 startActivity(intent);
 
             }
@@ -194,6 +195,12 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                 if (markerLayout == null) {
                     markerLayout = getLayoutInflater().inflate(R.layout.marker, null);
                 }
+                TextView titulo = markerLayout.findViewById(R.id.titulos);
+                TextView patente = markerLayout.findViewById(R.id.t_Patente);
+                TextView nomConductor = markerLayout.findViewById(R.id.t_Conductor);
+                TextView calificacion = markerLayout.findViewById(R.id.t_calificacion);
+                ImageView img = markerLayout.findViewById(R.id.iconos);
+                RatingBar ratingBar = markerLayout.findViewById(R.id.ratingBar);
 
 
                 for (Trasporte trasporte : tmpRealTimeTrasportes) {
@@ -202,12 +209,6 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                     if (marker.getSnippet().equals(trasporte.getIdTrasporte())) {
 
 
-                        TextView titulo = markerLayout.findViewById(R.id.titulos);
-                        TextView patente = markerLayout.findViewById(R.id.t_Patente);
-                        TextView nomConductor = markerLayout.findViewById(R.id.t_Conductor);
-                        TextView calificacion = markerLayout.findViewById(R.id.t_calificacion);
-                        ImageView img = markerLayout.findViewById(R.id.iconos);
-                        RatingBar ratingBar = markerLayout.findViewById(R.id.ratingBar);
 
 
                         Glide.with(markerLayout)
@@ -226,7 +227,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                         ratingBar.setRating(trasporte.getCalificacion());
                         patente.setText("Patente: " + trasporte.getPatente());
                         nomConductor.setText("Conductor: " + trasporte.getNombreConductor());
-                        calificacion.setText("Calificacion: " + trasporte.getCalificacion());
+                        calificacion.setText("Calificaciones: " + trasporte.getCalificacion());
                         return (markerLayout);
                     }
                 }

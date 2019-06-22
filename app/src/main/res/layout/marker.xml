@@ -54,6 +54,9 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:numStars="5"
+            android:progressTint="@color/colorAmarillo"
+            android:secondaryProgressTint="@color/colorAmarillo"
+            style="?android:attr/ratingBarStyleSmall"
             android:rating="1"
             android:isIndicator="true"
             />

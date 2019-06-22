@@ -40,12 +40,13 @@ public class CalificarActivity extends AppCompatActivity {
 
 
     private android.support.v7.widget.Toolbar toolbar;
-    private RatingBar ratingBar;
-    private TextView patente, nombre, txtcalificar;
+    private RatingBar ratingBar, ratingBarMini ;
+    private TextView patente, nombre, txtcalificar, txtTitulo , calificaciones ,txt_calificar;
     private EditText editReclamo;
     private Button btnCalificar, btnModifcar;
-    ImageView img;
+    private ImageView img;
     private String IDTrasporte = "";
+    private String LineaTrasporte = "";
     private Trasporte trasporte;
     private Calificacion calificacion;
 
@@ -62,18 +63,23 @@ public class CalificarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_calificar);
 
         ratingBar = findViewById(R.id.ratingBar);
+        ratingBarMini = findViewById(R.id.ratingBarCalificaciones);
         patente = findViewById(R.id.t2_patente);
         nombre = findViewById(R.id.t2_nombre);
+        calificaciones = findViewById(R.id.t2_calificaciones);
         btnCalificar = findViewById(R.id.btn_calificar);
         btnModifcar = findViewById(R.id.btn_modificarCalificacion);
         txtcalificar = findViewById(R.id.txt_calificacion);
+        txtTitulo = findViewById(R.id.txt_tituloCalificar);
+        txt_calificar = findViewById(R.id.t2_califcacion);
         editReclamo = findViewById(R.id.edit_reclamo);
         img = findViewById(R.id.iconos2);
+
 
         //mostrar descripcion
         Intent i = getIntent();
         IDTrasporte = i.getStringExtra("idTrasporte");
-
+        LineaTrasporte = i.getStringExtra("lineaTrasporte");
         //sin calificar
         btnModifcar.setVisibility(View.INVISIBLE);
         txtcalificar.setVisibility(View.INVISIBLE);
@@ -101,7 +107,7 @@ public class CalificarActivity extends AppCompatActivity {
 
                         ratingBar.setRating(cal.getCalificacion());
                         calificacion = cal;
-
+                        txt_calificar.setText("Mi Calificacion");
                         ratingBar.setEnabled(false);
                         btnCalificar.setVisibility(View.INVISIBLE);
                         btnModifcar.setVisibility(View.VISIBLE);
@@ -151,9 +157,9 @@ public class CalificarActivity extends AppCompatActivity {
                 format.format(calificacionfinal);
 
                 //actualiza la calificacion del trasporte
-                if (suma==0){
+                if (suma == 0) {
                     trasporte.setCalificacion(0);
-                }else {
+                } else {
                     trasporte.setCalificacion(calificacionfinal);
                 }
                 try {
@@ -173,7 +179,7 @@ public class CalificarActivity extends AppCompatActivity {
 
     private void BuscarMostrarTrasporte() {
 
-        myDatabase.child("trasporte").addListenerForSingleValueEvent(new ValueEventListener() {
+        myDatabase.child("trasporte").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -186,6 +192,11 @@ public class CalificarActivity extends AppCompatActivity {
 
                         patente.setText(tr.getPatente());
                         nombre.setText(tr.getNombreConductor());
+                        txtTitulo.setText("Calificar conductor de " + LineaTrasporte + ":");
+                        calificaciones.setText(tr.getCalificacion()+"");
+
+                        ratingBarMini.setEnabled(false);
+                        ratingBarMini.setRating(tr.getCalificacion());
 
                         Glide.with(getApplicationContext())
                                 .load(trasporte.getFotoConductorUrl())
@@ -207,8 +218,6 @@ public class CalificarActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     public void CalificarConductor(View view) {
@@ -250,6 +259,7 @@ public class CalificarActivity extends AppCompatActivity {
         btnModifcar.setVisibility(View.INVISIBLE);
         txtcalificar.setVisibility(View.INVISIBLE);
         btnCalificar.setVisibility(View.VISIBLE);
+        txt_calificar.setText("Agregar Calificacion");
         Toast.makeText(getApplicationContext(), "mi calificacion restaurada!", Toast.LENGTH_LONG).show();
 
     }
@@ -288,7 +298,6 @@ public class CalificarActivity extends AppCompatActivity {
         }
 
     }
-
 
 
     //boton de flecha atras de toolbar

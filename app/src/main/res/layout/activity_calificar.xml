@@ -67,7 +67,7 @@
                             android:layout_marginTop="10dp"
                             android:layout_toRightOf="@id/iconos2"
                             android:text="Patente:"
-                            android:textSize="13dp" />
+                            android:textSize="10dp" />
                         <TextView
                             android:id="@+id/t2_patente"
                             android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
                             android:layout_toRightOf="@id/iconos2"
                             android:text="informacion"
                             android:layout_below="@id/txt_patente"
-                            android:textSize="18dp" />
+                            android:textSize="13dp" />
                         <TextView
                             android:id="@+id/txt_nombre"
                             android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
                             android:layout_toRightOf="@id/iconos2"
                             android:text="Nombre conductor:"
                             android:layout_below="@id/t2_patente"
-                            android:textSize="13dp" />
+                            android:textSize="10dp" />
 
                         <TextView
                             android:id="@+id/t2_nombre"
@@ -95,7 +95,39 @@
                             android:layout_marginLeft="20dp"
                             android:layout_toRightOf="@id/iconos2"
                             android:text="informacion"
-                            android:textSize="18dp" />
+                            android:textSize="13dp" />
+
+                        <TextView
+                            android:id="@+id/txt_calificaciones"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_toRightOf="@id/iconos2"
+                            android:text="Calificaciones:"
+                            android:layout_below="@id/t2_nombre"
+                            android:textSize="10dp" />
+
+                        <TextView
+                            android:id="@+id/t2_calificaciones"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/txt_calificaciones"
+                            android:layout_marginLeft="20dp"
+                            android:layout_toRightOf="@id/iconos2"
+                            android:text="0.0"
+                            android:textSize="13dp" />
+                        <RatingBar
+                            android:id="@+id/ratingBarCalificaciones"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:progressTint="@color/colorAmarillo"
+                            android:secondaryProgressTint="@color/colorAmarillo"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_below="@id/txt_calificaciones"
+                            android:layout_toRightOf="@id/t2_calificaciones"
+                            android:numStars="5" />
+
 
                     </RelativeLayout>
 
@@ -106,7 +138,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="15dp"
-                        android:text="Mi Calificacion :"
+                        android:text="Agregar Calificacion"
                         android:textSize="13dp" />
 
                     <RatingBar
@@ -114,6 +146,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
+                        android:progressTint="@color/colorAmarillo"
+                        android:secondaryProgressTint="@color/colorAmarillo"
                         android:numStars="5" />
 
 
@@ -136,11 +170,10 @@
                             android:id="@+id/btn_modificarCalificacion"
                             android:layout_width="80dp"
                             android:layout_height="30dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginLeft="50dp"
+                            android:layout_marginLeft="20dp"
                             android:background="@color/colorRojo"
                             android:onClick="RestaurarCalificacion"
-                            android:text="restaurar"
+                            android:text="editar calificacion"
                             android:textColor="@color/colorBlanco"
                             android:textSize="10dp" />
 
@@ -148,9 +181,10 @@
                             android:id="@+id/txt_calificacion"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/btn_calificar"
                             android:layout_marginTop="5dp"
-                            android:text="Trasporte Calificado"
+                            android:text="Gracias por Calificar"
                             android:textSize="10dp"
                             android:textColor="@color/colorRojo" />
                     </RelativeLayout>
