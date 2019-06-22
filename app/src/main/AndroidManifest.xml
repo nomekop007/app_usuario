@@ -24,7 +24,9 @@
         <activity android:name=".CalificarActivity"
             android:configChanges="screenSize|orientation"
             android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".RegistrarActivity" />
+        <activity android:name=".RegistrarActivity"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="stateHidden"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -56,7 +58,9 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
