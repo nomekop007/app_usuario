@@ -156,6 +156,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         fm.beginTransaction().replace(R.id.mainActivity,lineaFragment).commit();
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                         break;
+                    case R.id.perfil:
+                        toolbar.setTitle("Mi Perfil");
+                        PerfilFragment perfilFragment = new PerfilFragment();
+                        fm.beginTransaction().replace(R.id.mainActivity,perfilFragment).commit();
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                        break;
                 }
 
 

@@ -143,7 +143,7 @@
                         android:id="@+id/bt_verificar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorAzul"
+                        android:background="@color/colorPrimary"
                         android:textColor="@color/colorBlanco"
                         android:text="Registrar"
                         android:layout_margin="20dp"
