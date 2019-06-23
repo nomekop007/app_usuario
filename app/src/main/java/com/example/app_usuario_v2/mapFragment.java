@@ -217,7 +217,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                                 .centerCrop()
                                 .circleCrop()
                                 .error(R.drawable.error)
-                                .placeholder(R.drawable.cargando)
+                                .placeholder(R.drawable.user)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(img);

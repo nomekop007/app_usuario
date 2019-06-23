@@ -29,13 +29,7 @@ public class RegistrarActivity extends AppCompatActivity {
 
     private android.support.v7.widget.Toolbar toolbar;
 
-    private TextInputLayout nombre;
-    private TextInputLayout usuario;
-    private TextInputLayout correo;
-    private TextInputLayout direccion;
-    private TextInputLayout contraseña;
-    private TextInputLayout confContraseña;
-
+    private TextInputLayout nombre,usuario,correo,direccion,contraseña,confContraseña;
 
     //declarar objeto firebaseAuth
     private FirebaseAuth firebaseAuth;

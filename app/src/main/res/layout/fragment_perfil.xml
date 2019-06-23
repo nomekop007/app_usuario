@@ -35,7 +35,15 @@
                     android:layout_height="150dp"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="20dp"
-                    android:src="@drawable/circulo2" />
+                    android:src="@drawable/circulo" />
+
+                <ImageView
+                    android:id="@+id/iconosPerfiluser"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="20dp"
+                    android:src="@drawable/user" />
             </RelativeLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -70,7 +78,6 @@
             </android.support.design.widget.TextInputLayout>
 
 
-
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/txtPerfil_direccion"
                 android:layout_width="match_parent"
@@ -86,54 +93,61 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/txtPerfil_contraseña"
-                android:layout_width="match_parent"
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="15"
-                app:passwordToggleEnabled="true"
-                android:layout_margin="20dp"
-                app:errorEnabled="true">
-                <android.support.design.widget.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Actual contraseña"
-                    android:inputType="textPassword"/>
-
-            </android.support.design.widget.TextInputLayout>
-
-
-
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="40dp"
+                android:text="Cambiar Contraseña:"
+                android:textSize="13dp"/>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/txtPerfil_confContraseña"
+                android:id="@+id/txtPerfil_NuevaContraseña"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="20dp"
                 app:counterEnabled="true"
                 app:counterMaxLength="15"
-                app:passwordToggleEnabled="true"
-                android:layout_margin="20dp"
-                app:errorEnabled="true">
+                app:errorEnabled="true"
+                app:passwordToggleEnabled="true">
+
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Nueva contraseña"
-                    android:inputType="textPassword"/>
+                    android:inputType="textPassword" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txtPerfil_RepetirContraseña"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="15"
+                app:errorEnabled="true"
+                app:passwordToggleEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Repetir contraseña"
+                    android:inputType="textPassword" />
 
             </android.support.design.widget.TextInputLayout>
 
 
             <Button
                 android:id="@+id/btPerfil_cambiar"
-                android:layout_margin="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="20dp"
                 android:background="@color/colorPrimary"
-                android:textColor="@color/colorBlanco"
                 android:text="Aceptar Cambios"
-                />
+                android:textColor="@color/colorBlanco" />
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

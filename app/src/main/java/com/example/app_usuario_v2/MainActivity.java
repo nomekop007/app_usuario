@@ -159,6 +159,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     case R.id.perfil:
                         toolbar.setTitle("Mi Perfil");
                         PerfilFragment perfilFragment = new PerfilFragment();
+
+                        //enviar parametros
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("TIPO_LOGEO", TIPO_LOGEO);
+                        perfilFragment.setArguments(bundle);
+
                         fm.beginTransaction().replace(R.id.mainActivity,perfilFragment).commit();
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                         break;
@@ -186,12 +192,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        Log.e("display name : ", user.getDisplayName() + "");
-        Log.e("email : ", user.getEmail() + "");
-        Log.e("providerid : ", user.getProviderId() + "");
-        Log.e("UID : ", user.getUid() + "");
-        Log.e("numero : ", user.getPhoneNumber() + "");
-
 
         mydatabasereference.child("usuario").child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 //mostrar los datos del perfil en el header del drawer
 
                 //informacion del usuario que se muestra en el drawer header
-                ((TextView) header.findViewById(R.id.nombre)).setText(perfil.getNombreCompleto() + "");
+                ((TextView) header.findViewById(R.id.nombre)).setText(perfil.getNombreUsuario() + "");
                 ((TextView) header.findViewById(R.id.gmail)).setText(perfil.getCorreoElectronico() + "");
 
             }

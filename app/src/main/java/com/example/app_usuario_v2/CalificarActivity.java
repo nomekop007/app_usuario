@@ -179,24 +179,19 @@ public class CalificarActivity extends AppCompatActivity {
 
     private void BuscarMostrarTrasporte() {
 
-        myDatabase.child("trasporte").addValueEventListener(new ValueEventListener() {
+        myDatabase.child("trasporte").child(IDTrasporte).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    trasporte = dataSnapshot.getValue(Trasporte.class);
 
-                    Trasporte tr = snapshot.getValue(Trasporte.class);
-
-                    if (tr.getIdTrasporte().equals(IDTrasporte)) {
-                        trasporte = tr;
-
-                        patente.setText(tr.getPatente());
-                        nombre.setText(tr.getNombreConductor());
+                        patente.setText(trasporte.getPatente());
+                        nombre.setText(trasporte.getNombreConductor());
                         txtTitulo.setText("Calificar conductor de " + LineaTrasporte + ":");
-                        calificaciones.setText(tr.getCalificacion()+"");
+                        calificaciones.setText(trasporte.getCalificacion()+"");
 
                         ratingBarMini.setEnabled(false);
-                        ratingBarMini.setRating(tr.getCalificacion());
+                        ratingBarMini.setRating(trasporte.getCalificacion());
 
                         Glide.with(getApplicationContext())
                                 .load(trasporte.getFotoConductorUrl())
@@ -209,8 +204,7 @@ public class CalificarActivity extends AppCompatActivity {
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(img);
 
-                    }
-                }
+
             }
 
             @Override
