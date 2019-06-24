@@ -12,10 +12,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -81,6 +83,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
     private int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
     private int BORRADOR = 0;
+    private FloatingActionButton GPS;
 
     //donde se guarda los datos de la linea recibida
     private int ID = 0;
@@ -101,7 +104,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         //inicar venta en invisible
         ventana = v.findViewById(R.id.ventana);
         nombreLinea = v.findViewById(R.id.v_linea);
-
+        GPS = v.findViewById(R.id.bottonGps);
         ventana.setVisibility(v.INVISIBLE);
         Leyenda();
         return v;
@@ -149,19 +152,19 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                 != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
+        MostrarMiGPS();
         mMap.setMyLocationEnabled(true);
 
 
         //habilita algunas funciones que bienen desabilitadad en google maps
         UiSettings uiSettings = mMap.getUiSettings();
 
-        //boton de zoom
-        uiSettings.setZoomControlsEnabled(true);
+        uiSettings.setMyLocationButtonEnabled(false);
 
         //llama al metodo si es que hay una linea seleccionada
         if (ID != 0) {
             mostrarRecorrido(ID);
-
         }
 
         //que la aplicacion empieze con la ubicacion de talca
@@ -233,6 +236,19 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
 
                 return null;
+            }
+        });
+    }
+
+    private void MostrarMiGPS() {
+        GPS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //extrae la ubicacion del movil y la guarda en location
+              Location location =  mMap.getMyLocation();
+                LatLng myUbicacion = new LatLng(location.getLatitude(), location.getLongitude());
+                // v:distancia y i:velocidad animacion
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myUbicacion, 17), 1100, null);
             }
         });
     }
