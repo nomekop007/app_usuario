@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,9 +18,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.app_usuario_v2.model.Calificacion;
 import com.example.app_usuario_v2.model.Reclamo;
 import com.example.app_usuario_v2.model.Trasporte;
-import com.example.app_usuario_v2.model.Usuario;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,15 +28,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.UUID;
 
 public class CalificarActivity extends AppCompatActivity {
 
 
     private android.support.v7.widget.Toolbar toolbar;
-    private RatingBar ratingBar, ratingBarMini ;
-    private TextView patente, nombre, txtcalificar, txtTitulo , calificaciones ,txt_calificar;
+    private RatingBar ratingBar, ratingBarMini;
+    private TextView patente, nombre, txtcalificar, txtTitulo, calificaciones, txt_calificar;
     private EditText editReclamo;
     private Button btnCalificar, btnModifcar;
     private ImageView img;
@@ -150,11 +144,14 @@ public class CalificarActivity extends AppCompatActivity {
                         suma = suma + cal.getCalificacion();
                     }
                 }
-
-                DecimalFormat format = new DecimalFormat("#.##");
                 calificacionfinal = suma / cantidad;
 
-                format.format(calificacionfinal);
+
+                //quitar desimales
+                String cad = String.valueOf(calificacionfinal);
+                cad = cad.substring(0, 3);
+                calificacionfinal = Float.parseFloat(cad);
+
 
                 //actualiza la calificacion del trasporte
                 if (suma == 0) {
@@ -183,28 +180,31 @@ public class CalificarActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                try {
                     trasporte = dataSnapshot.getValue(Trasporte.class);
 
-                        patente.setText(trasporte.getPatente());
-                        nombre.setText(trasporte.getNombreConductor());
-                        txtTitulo.setText("Calificar conductor de " + LineaTrasporte + ":");
-                        calificaciones.setText(trasporte.getCalificacion()+"");
+                    patente.setText(trasporte.getPatente());
+                    nombre.setText(trasporte.getNombreConductor());
+                    txtTitulo.setText("Calificar conductor de " + LineaTrasporte + ":");
+                    calificaciones.setText(trasporte.getCalificacion() + "");
 
-                        ratingBarMini.setEnabled(false);
-                        ratingBarMini.setRating(trasporte.getCalificacion());
+                    ratingBarMini.setEnabled(false);
+                    ratingBarMini.setRating(trasporte.getCalificacion());
 
-                        Glide.with(getApplicationContext())
-                                .load(trasporte.getFotoConductorUrl())
-                                .fitCenter()
-                                .centerCrop()
-                                .circleCrop()
-                                .error(R.drawable.error)
-                                .placeholder(R.drawable.cargando)
-                                .thumbnail(0.5f)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(img);
-
-
+                    Glide.with(getApplicationContext())
+                            .load(trasporte.getFotoConductorUrl())
+                            .fitCenter()
+                            .centerCrop()
+                            .circleCrop()
+                            .error(R.drawable.error)
+                            .placeholder(R.drawable.cargando)
+                            .thumbnail(0.5f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(img);
+                } catch (Exception e) {
+                    //en caso de borrar trasporte
+                    finish();
+                }
             }
 
             @Override

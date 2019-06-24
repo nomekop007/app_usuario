@@ -189,6 +189,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
             public View getInfoWindow(Marker arg0) {
                 return null;
             }
+
             @Override
             public View getInfoContents(Marker marker) {
 
@@ -207,8 +208,6 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
                     //busca el trasporte mediate la descripcion del marker seleccionado
                     if (marker.getSnippet().equals(trasporte.getIdTrasporte())) {
-
-
 
 
                         Glide.with(markerLayout)
@@ -433,64 +432,61 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
+                            try {
+                                coordenada cord = dataSnapshot.getValue(coordenada.class);
+                                double latitud = cord.getLatitud();
+                                double longitud = cord.getLongitud();
 
-                            coordenada cord = dataSnapshot.getValue(coordenada.class);
-                            double latitud = cord.getLatitud();
-                            double longitud = cord.getLongitud();
+                                for (Trasporte trasporte : ListaTrasportes) {
 
+                                    if (trasporte.getIdTrasporte().equals(cord.getIdTrasporte())) {
 
-                            for (Trasporte trasporte : ListaTrasportes) {
+                                        MarkerOptions markerOptions = new MarkerOptions();
 
-                                if (trasporte.getIdTrasporte().equals(cord.getIdTrasporte())) {
-
-                                    MarkerOptions markerOptions = new MarkerOptions();
-
-                                    markerOptions.position(new LatLng(latitud, longitud));
-                                    markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.icon));
-                                    markerOptions.snippet(trasporte.getIdTrasporte());
-
-
-                                    //extrae el nombre de la linea y la coloca como titulo
-                                    for (LineaTrasporte linea : lineasActuales) {
-                                        if (linea.getIdLinea() == trasporte.getIdLinea()) {
-                                            markerOptions.title(linea.getNombreLinea());
-                                        }
-                                    }
+                                        markerOptions.position(new LatLng(latitud, longitud));
+                                        markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.icon));
+                                        markerOptions.snippet(trasporte.getIdTrasporte());
 
 
-                                    //borra la coordenada antiguo y la remplaza por la nueva
-                                    if (BORRADOR == 1) {
-                                        for (Marker marker : RealTimeMarkets) {
-                                            if (marker.getSnippet().equals(trasporte.getIdTrasporte())) {
-                                                marker.remove();
+                                        //extrae el nombre de la linea y la coloca como titulo
+                                        for (LineaTrasporte linea : lineasActuales) {
+                                            if (linea.getIdLinea() == trasporte.getIdLinea()) {
+                                                markerOptions.title(linea.getNombreLinea());
                                             }
                                         }
-                                    }
 
 
-
-                                    //si las coordenadas son 0 quita el trasporte del mapa
-                                    if (latitud != 0 || longitud != 0) {
-                                        try {
-
-                                            if (ID == 0) {
-                                                RealTimeMarkets.add(mMap.addMarker(markerOptions));
-                                            } else {
-                                                if (trasporte.getIdLinea() == ID) {
-                                                    RealTimeMarkets.add(mMap.addMarker(markerOptions));
+                                        //borra la coordenada antiguo y la remplaza por la nueva
+                                        if (BORRADOR == 1) {
+                                            for (Marker marker : RealTimeMarkets) {
+                                                if (marker.getSnippet().equals(trasporte.getIdTrasporte())) {
+                                                    marker.remove();
                                                 }
-                                                //de lo contrario no se mostrara el marker
                                             }
+                                        }
 
-                                        } catch (Exception e) {
 
+                                        //si las coordenadas son 0 quita el trasporte del mapa
+                                        if (latitud != 0 || longitud != 0) {
+                                            try {
+
+                                                if (ID == 0) {
+                                                    RealTimeMarkets.add(mMap.addMarker(markerOptions));
+                                                } else {
+                                                    if (trasporte.getIdLinea() == ID) {
+                                                        RealTimeMarkets.add(mMap.addMarker(markerOptions));
+                                                    }
+                                                    //de lo contrario no se mostrara el marker
+                                                }
+
+                                            } catch (Exception e) {
+
+                                            }
                                         }
                                     }
-
-
-
-
                                 }
+                            } catch (Exception e) {
+                                //en caso de que se borre el trasporte
                             }
                         }
 
@@ -498,6 +494,8 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                         public void onCancelled(DatabaseError databaseError) {
 
                         }
+
+
                     });
 
 

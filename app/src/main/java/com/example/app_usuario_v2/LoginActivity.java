@@ -3,9 +3,11 @@ package com.example.app_usuario_v2;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,7 +43,7 @@ import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-
+    private int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
     public static int TIPO_LOGEO = 0;
     // 1 es logeo normal
     // 2 es logeo con google
@@ -78,7 +80,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //cierra todas las sesion cada vez que se inicia la app
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
-
+        SolicitudDePermisoGPS();
 
         //iniciar progressDialig
         progressDialog = new ProgressDialog(this);
@@ -87,8 +89,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         logeoConFacebook();
 
 
-
-            //escucha si es que se habre alguna instancia de logeo
+        //escucha si es que se habre alguna instancia de logeo
         firebaseAuth = firebaseAuth.getInstance();
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -101,6 +102,26 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 progressDialog.dismiss();
             }
         };
+    }
+
+
+    private void SolicitudDePermisoGPS() {
+
+        //pregunta si el permiso no esta dado
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            Log.e("permiso : ", "no dado");
+
+            //si no esta dado , habre la ventana de pregunta
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            return;
+
+        }
+
+
     }
 
     //logearse con cuenta creada
@@ -163,12 +184,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-
-
     public void logeoConFacebook() {
         callbackManager = CallbackManager.Factory.create();
         loginButton = findViewById(R.id.btn_facebook);
-       // loginButton.setReadPermissions(Arrays.asList("email"));
+        // loginButton.setReadPermissions(Arrays.asList("email"));
         loginButton.setPermissions(Arrays.asList("email"));
 
         //se oprime botton de facebook
@@ -195,7 +214,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
 
 
-
     }
 
     private void hardleFacebookAccessToken(AccessToken accessToken) {
@@ -216,12 +234,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 //fin de logeo facebook
 
 
-
-
-
-
-
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -233,14 +245,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onStop();
         firebaseAuth.removeAuthStateListener(firebaseAuthListener);
     }
-
-
-
-
-
-
-
-
 
 
     // inicio de logeo con cuenta gmail
@@ -270,7 +274,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
 
 
-
     }
 
     @Override
@@ -296,7 +299,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void handleSignInResultGoogle(GoogleSignInResult result) {
         if (result.isSuccess()) {
 
-             firebaseAuthWithGoogle(result.getSignInAccount());
+            firebaseAuthWithGoogle(result.getSignInAccount());
 
         } else {
 
@@ -308,11 +311,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount signInAccount) {
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(),null);
+        AuthCredential credential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (!task.isSuccessful()){
+                if (!task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), "ocurrio un error de login", Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
                 }
