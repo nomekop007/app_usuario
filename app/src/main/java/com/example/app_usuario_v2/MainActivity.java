@@ -2,6 +2,7 @@ package com.example.app_usuario_v2;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -354,14 +356,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onBackPressed() {
-
-        if (TIPO_LOGEO == 2) {
-            cerrarSesionGoogle();
-        } else if (TIPO_LOGEO == 3) {
-            cerrarSesionFacebook();
-        } else {
-            cerrarSesion();
-        }
-
+        drawerLayout.closeDrawers();
     }
 }
