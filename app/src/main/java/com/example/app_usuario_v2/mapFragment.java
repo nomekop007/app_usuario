@@ -244,11 +244,16 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         GPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //extrae la ubicacion del movil y la guarda en location
-              Location location =  mMap.getMyLocation();
-                LatLng myUbicacion = new LatLng(location.getLatitude(), location.getLongitude());
-                // v:distancia y i:velocidad animacion
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myUbicacion, 17), 1100, null);
+
+                try {
+                    //extrae la ubicacion del movil y la guarda en location
+                    Location location = mMap.getMyLocation();
+                    LatLng myUbicacion = new LatLng(location.getLatitude(), location.getLongitude());
+                    // v:distancia y i:velocidad animacion
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myUbicacion, 17), 1100, null);
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "la ubicacion no esta activada!", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

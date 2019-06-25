@@ -1,6 +1,7 @@
 package com.example.app_usuario_v2;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -62,11 +64,19 @@ public class PerfilFragment extends Fragment {
     private Usuario usuario;
     private int TipoLogeo;
 
+
+    //declarar circulo de cargando
+    private ProgressDialog progressDialog;
+
+    private CheckBox opcion;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_perfil, container, false);
 
+        //iniciar progressDialig
+        progressDialog = new ProgressDialog(getContext());
 
         img = v.findViewById(R.id.iconosPerfiluser);
         nombre = v.findViewById(R.id.txtPerfil_nombreCompleto);
@@ -75,14 +85,42 @@ public class PerfilFragment extends Fragment {
         C_nueva = v.findViewById(R.id.txtPerfil_NuevaContraseña);
         C_repetir = v.findViewById(R.id.txtPerfil_RepetirContraseña);
         btn = v.findViewById(R.id.btPerfil_cambiar);
+        opcion = v.findViewById(R.id.opcion);
 
         fm = getFragmentManager();
         ft = fm.beginTransaction();
 
         MostrarDatosUsuario();
+        CheckboxOpcion();
         BotonGuardarCambios();
         return v;
     }
+
+    public void CheckboxOpcion() {
+        opcion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (opcion.isChecked()) {
+                    nombre.setEnabled(false);
+                    correo.setEnabled(false);
+                    direccion.setEnabled(false);
+
+                    C_nueva.setEnabled(true);
+                    C_repetir.setEnabled(true);
+                } else {
+                    nombre.setEnabled(true);
+                    correo.setEnabled(true);
+                    direccion.setEnabled(true);
+
+                    C_nueva.setEnabled(false);
+                    C_repetir.setEnabled(false);
+                }
+
+            }
+        });
+    }
+
 
     public void BotonGuardarCambios() {
         //evento botton
@@ -90,67 +128,26 @@ public class PerfilFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                //validar todos los campos
-                if (!validarNombre() | !validarCorreo() | !validarDireccion()) {
-                    return;
-                }
-
+                //pregunta si es un logeo normal o no
                 if (TipoLogeo == 1) {
 
-                    //actualizar Email
-                    user.updateEmail(correo.getEditText().getText().toString().trim())
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-
-                                        usuario.setCorreoElectronico(user.getEmail());
-                                        usuario.setNombreCompleto(nombre.getEditText().getText().toString().trim());
-                                        usuario.setDireccion(direccion.getEditText().getText().toString().trim());
-
-                                        //actualizar Usuario
-                                        myDatabase.child("usuario").child(usuario.getIdUsuario()).setValue(usuario);
-
-                                    }
-                                }
-                            });
-
-
-                    //actualizar Contraseña
-                    String T = C_nueva.getEditText().getText().toString().trim();
-                    String R = C_repetir.getEditText().getText().toString().trim();
-                    if (!T.isEmpty()) {
-                        //si la caja de texto repetir esta vacia arroja mensaje en rojo
-                        if (!validarC_repetir()) {
-                            return;
-                        } else {
-                            //pregunta si las dos contraseñas son iguales
-                            if (T.equals(R)) {
-                                user.updatePassword(C_nueva.getEditText().getText().toString().trim())
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(getContext(), "contraseña Cambiada!", Toast.LENGTH_LONG).show();
-                                                    C_nueva.getEditText().setText("");
-                                                    C_repetir.getEditText().setText("");
-                                                }
-                                            }
-                                        });
-                            } else {
-                                Toast.makeText(getContext(), "las contraseñas no coinciden!", Toast.LENGTH_LONG).show();
-                                C_nueva.getEditText().setText("");
-                                C_repetir.getEditText().setText("");
-                                return;
-                            }
-
-                        }
+                    if (!opcion.isChecked()) {
+                        ActualizarDatos();
+                    } else {
+                        ActualizarContraseña();
                     }
 
 
                 } else {
-
                     //logeo con cuenta de facebook o google
+
+
+                    //validar todos los campos
+                    if (!validarNombre() | !validarCorreo() | !validarDireccion()) {
+                        return;
+                    }
+
+
                     Usuario u = new Usuario();
                     u.setIdUsuario(user.getUid());
                     u.setNombreCompleto(user.getDisplayName());
@@ -163,16 +160,105 @@ public class PerfilFragment extends Fragment {
                     myDatabase.child("usuario").child(u.getIdUsuario()).setValue(u);
 
                 }
-
-                Toast.makeText(getContext(), "cambios guardados!", Toast.LENGTH_LONG).show();
             }
+
         });
+
     }
+
+
+    public void ActualizarDatos() {
+
+
+        //validar todos los campos
+        if (!validarNombre() | !validarCorreo() | !validarDireccion()) {
+            return;
+        }
+
+        //cuadro de espera
+        progressDialog.setMessage("Validando datos...");
+        progressDialog.show();
+        //actualizar Email
+        user.updateEmail(correo.getEditText().getText().toString().trim())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        if (task.isSuccessful()) {
+
+                            usuario.setCorreoElectronico(user.getEmail());
+                            usuario.setNombreCompleto(nombre.getEditText().getText().toString().trim());
+                            usuario.setDireccion(direccion.getEditText().getText().toString().trim());
+
+                            //actualizar Usuario
+                            myDatabase.child("usuario").child(usuario.getIdUsuario()).setValue(usuario);
+                            Toast.makeText(getContext(), "datos actualizados!", Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+                            return;
+                        } else {
+                            Toast.makeText(getContext(), "error en la operacion!", Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+                            return;
+                        }
+
+                    }
+                });
+    }
+
+    public void ActualizarContraseña() {
+        //si la caja de texto  estan vacia arroja mensaje en rojo
+        if (!validarC_repetir() | !validarC_Nueva()) {
+            return;
+        }
+
+        //pregunta si las dos contraseñas son iguales
+        String T = C_nueva.getEditText().getText().toString().trim();
+        String R = C_repetir.getEditText().getText().toString().trim();
+        if (T.equals(R)) {
+
+            //cuadro de espera
+            progressDialog.setMessage("Validando contraseña...");
+            progressDialog.show();
+
+            user.updatePassword(C_nueva.getEditText().getText().toString().trim())
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            if (task.isSuccessful()) {
+                                C_nueva.getEditText().setText("");
+                                C_repetir.getEditText().setText("");
+                                Toast.makeText(getContext(), "contraseña Cambiada!", Toast.LENGTH_LONG).show();
+                                progressDialog.dismiss();
+                                return;
+                            } else {
+                                C_nueva.getEditText().setText("");
+                                C_repetir.getEditText().setText("");
+
+                                Toast.makeText(getContext(), "error al cambiar la contraseña!", Toast.LENGTH_LONG).show();
+                                progressDialog.dismiss();
+                                return;
+                            }
+
+                        }
+                    });
+
+
+        } else {
+            Toast.makeText(getContext(), "las contraseñas no coinciden!", Toast.LENGTH_LONG).show();
+            C_nueva.getEditText().setText("");
+            C_repetir.getEditText().setText("");
+            return;
+        }
+    }
+
 
     public void MostrarDatosUsuario() {
         //pregunta si llego una varible (siempre llega)
         if (getArguments() != null) {
 
+            C_nueva.setEnabled(false);
+            C_repetir.setEnabled(false);
 
             TipoLogeo = getArguments().getInt("TIPO_LOGEO");
             Glide.with(getContext())
@@ -188,7 +274,7 @@ public class PerfilFragment extends Fragment {
 
             BuscarUsuario();
             if (TipoLogeo != 1) {
-
+                opcion.setVisibility(View.INVISIBLE);
                 nombre.getEditText().setText(user.getDisplayName());
                 nombre.setEnabled(false);
 
@@ -275,6 +361,18 @@ public class PerfilFragment extends Fragment {
             return false;
         } else {
             C_repetir.setError(null);
+            return true;
+        }
+
+    }
+
+    private boolean validarC_Nueva() {
+        String T = C_nueva.getEditText().getText().toString().trim();
+        if (T.isEmpty()) {
+            C_nueva.setError("Campo Vacio");
+            return false;
+        } else {
+            C_nueva.setError(null);
             return true;
         }
 

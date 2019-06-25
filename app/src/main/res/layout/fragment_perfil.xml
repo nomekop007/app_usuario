@@ -93,14 +93,25 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <CheckBox
+                    android:id="@+id/opcion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                   android:layout_marginLeft="20dp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="40dp"
-                android:text="Cambiar Contraseña:"
-                android:textSize="13dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/opcion"
+                    android:text="Cambiar Contraseña:"
+                    android:layout_marginTop="5dp"
+                    android:textSize="13dp" />
+
+
+            </RelativeLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/txtPerfil_NuevaContraseña"
