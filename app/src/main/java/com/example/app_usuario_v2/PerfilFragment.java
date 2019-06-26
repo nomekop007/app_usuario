@@ -175,7 +175,7 @@ public class PerfilFragment extends Fragment {
         }
 
         //cuadro de espera
-        progressDialog.setMessage("Validando datos...");
+        progressDialog.setMessage("verificando datos...");
         progressDialog.show();
         //actualizar Email
         user.updateEmail(correo.getEditText().getText().toString().trim())
@@ -195,7 +195,7 @@ public class PerfilFragment extends Fragment {
                             progressDialog.dismiss();
                             return;
                         } else {
-                            Toast.makeText(getContext(), "error en la operacion!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "correo Electronico no valido!", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
                             return;
                         }
@@ -216,7 +216,7 @@ public class PerfilFragment extends Fragment {
         if (T.equals(R)) {
 
             //cuadro de espera
-            progressDialog.setMessage("Validando contraseña...");
+            progressDialog.setMessage("verificando contraseña...");
             progressDialog.show();
 
             user.updatePassword(C_nueva.getEditText().getText().toString().trim())
@@ -234,7 +234,7 @@ public class PerfilFragment extends Fragment {
                                 C_nueva.getEditText().setText("");
                                 C_repetir.getEditText().setText("");
 
-                                Toast.makeText(getContext(), "error al cambiar la contraseña!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), "contraseña no valida!", Toast.LENGTH_LONG).show();
                                 progressDialog.dismiss();
                                 return;
                             }

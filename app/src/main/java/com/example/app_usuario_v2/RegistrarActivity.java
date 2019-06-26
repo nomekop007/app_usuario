@@ -138,7 +138,7 @@ public class RegistrarActivity extends AppCompatActivity {
 
                                 //crea el usuario en la base de datos de firebase realtime
                                 mydatabasereference.child("usuario").child(user.getUid()).setValue(u);
-                                Toast.makeText(RegistrarActivity.this, "Registro exitoso! de Usuario : " + usuario.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegistrarActivity.this, "Usuario " + usuario.getEditText().getText().toString()+" registrado exitosamente", Toast.LENGTH_SHORT).show();
                                 firebaseAuth.getInstance().signOut();
                                 finish();
 

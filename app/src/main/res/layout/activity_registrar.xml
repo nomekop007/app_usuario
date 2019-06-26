@@ -46,6 +46,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Nombre Completo"
+                            android:maxLength="20"
                             android:inputType="text"/>
 
                     </android.support.design.widget.TextInputLayout>
@@ -63,6 +64,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="nombre Usuario"
+                            android:maxLength="12"
                             android:inputType="text"/>
 
                     </android.support.design.widget.TextInputLayout>
@@ -79,6 +81,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Correo Electronico"
+                            android:maxLength="30"
                             android:inputType="textEmailAddress"/>
 
                     </android.support.design.widget.TextInputLayout>
@@ -95,6 +98,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Direccion"
+                            android:maxLength="30"
                             android:inputType="text"/>
 
                     </android.support.design.widget.TextInputLayout>
@@ -105,7 +109,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:counterEnabled="true"
-                        app:counterMaxLength="15"
+                        app:counterMaxLength="20"
                         app:passwordToggleEnabled="true"
                         android:layout_margin="20dp"
                         app:errorEnabled="true">
@@ -113,6 +117,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Contraseña"
+                            android:maxLength="20"
                             android:inputType="textPassword"/>
 
                     </android.support.design.widget.TextInputLayout>
@@ -126,13 +131,14 @@
                         android:layout_height="wrap_content"
                         app:counterEnabled="true"
                         android:layout_margin="20dp"
-                        app:counterMaxLength="15"
+                        app:counterMaxLength="20"
                         app:passwordToggleEnabled="true"
                         app:errorEnabled="true">
                         <android.support.design.widget.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Verficar Contraseña"
+                            android:maxLength="20"
                             android:inputType="textPassword"/>
 
                     </android.support.design.widget.TextInputLayout>

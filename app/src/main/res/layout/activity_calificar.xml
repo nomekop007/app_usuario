@@ -208,6 +208,7 @@
                         android:layout_marginRight="20dp"
                         android:background="@color/colorplomo2"
                         android:gravity="top"
+                        android:maxLength="200"
                         android:hint="ingrese aqui su reclamo"
                         android:textSize="10dp" />
 
