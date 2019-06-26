@@ -38,7 +38,7 @@
         android:layout_below="@id/item_linea"
         android:layout_toRightOf="@+id/item_img"
         android:text="nombre agencia"
-        android:textSize="15dp"
+        android:textSize="13dp"
         android:textStyle="italic" />
     <TextView
         android:id="@+id/item_id"

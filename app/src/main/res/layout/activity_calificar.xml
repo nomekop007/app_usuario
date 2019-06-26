@@ -209,7 +209,7 @@
                         android:background="@color/colorplomo2"
                         android:gravity="top"
                         android:hint="ingrese aqui su reclamo"
-                        android:textSize="15dp" />
+                        android:textSize="10dp" />
 
 
                     <Button

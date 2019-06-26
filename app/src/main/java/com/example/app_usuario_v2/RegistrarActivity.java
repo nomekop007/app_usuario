@@ -138,8 +138,9 @@ public class RegistrarActivity extends AppCompatActivity {
 
                                 //crea el usuario en la base de datos de firebase realtime
                                 mydatabasereference.child("usuario").child(user.getUid()).setValue(u);
-
-                                     cerrar();
+                                Toast.makeText(RegistrarActivity.this, "Registro exitoso! de Usuario : " + usuario.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
+                                firebaseAuth.getInstance().signOut();
+                                finish();
 
                            } else {
 
@@ -149,7 +150,7 @@ public class RegistrarActivity extends AppCompatActivity {
 
                                 } else {
                                     //en caso contrario
-                                    Toast.makeText(RegistrarActivity.this, "Error de Registro!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RegistrarActivity.this, "parametros no validos!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                             progressDialog.dismiss();
@@ -159,13 +160,6 @@ public class RegistrarActivity extends AppCompatActivity {
         }
 
 
-    }
-
-    private void cerrar(){
-        Intent intent = new Intent(this, LoginActivity.class);
-        Toast.makeText(RegistrarActivity.this, "Registro exitoso! de Usuario : " + usuario.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
-        startActivity(intent);
-       onBackPressed();
     }
 
     @Override

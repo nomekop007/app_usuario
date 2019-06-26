@@ -13,7 +13,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_margin="20dp"
-        android:src="@drawable/circulo"/>
+        android:src="@drawable/circulo" />
 
 
 
@@ -35,39 +35,38 @@
         android:layout_toRightOf="@id/imagenUser"
         android:layout_marginTop="10dp"
         />
-
     <TextView
-        android:id="@+id/nombre"
+        android:id="@+id/nombreUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17dp"
+        android:textSize="16dp"
         android:text="nombre"
         android:textColor="@color/colorBlanco"
         android:layout_toRightOf="@id/imagenUser"
-
         android:layout_below="@id/usuario"
         />
+
 
     <TextView
         android:id="@+id/gmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="11dp"
+        android:textSize="13dp"
         android:textColor="@color/colorBlanco"
         android:text="gmail"
         android:layout_toRightOf="@id/imagenUser"
-        android:layout_below="@id/nombre"
-        android:textStyle="italic"
+        android:layout_below="@id/nombreUser"
         />
     <TextView
         android:id="@+id/code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="13dp"
+        android:textSize="10dp"
         android:textColor="@color/colorEtiqueta"
-        android:text=""
+        android:text="code"
         android:layout_toRightOf="@id/imagenUser"
         android:layout_below="@id/gmail"
+        android:textStyle="italic"
         />
 
 

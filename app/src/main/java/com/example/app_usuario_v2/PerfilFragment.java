@@ -71,8 +71,7 @@ public class PerfilFragment extends Fragment {
     private CheckBox opcion;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_perfil, container, false);
 
         //iniciar progressDialig
@@ -158,7 +157,7 @@ public class PerfilFragment extends Fragment {
 
                     //actualizar Usuario
                     myDatabase.child("usuario").child(u.getIdUsuario()).setValue(u);
-
+                    Toast.makeText(getContext(), "datos actualizados!", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -251,7 +250,6 @@ public class PerfilFragment extends Fragment {
             return;
         }
     }
-
 
     public void MostrarDatosUsuario() {
         //pregunta si llego una varible (siempre llega)

@@ -156,12 +156,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                             if (task.isSuccessful()) {
 
-                                FirebaseUser user = firebaseAuth.getCurrentUser();
-                                Toast.makeText(LoginActivity.this, "Bienvenido " + user.getEmail(), Toast.LENGTH_SHORT).show();
-                                //metodo para redireccionar al main
-
                                 TIPO_LOGEO = 1;
-
+                                //metodo para redireccionar al main
                                 goMainScreen(TIPO_LOGEO);
                             } else {
                                 Toast.makeText(LoginActivity.this, "nombre o contraseña incorrecto", Toast.LENGTH_SHORT).show();

@@ -204,8 +204,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 //mostrar los datos del perfil en el header del drawer
 
                 //informacion del usuario que se muestra en el drawer header
-                ((TextView) header.findViewById(R.id.nombre)).setText(perfil.getNombreUsuario() + "");
+                ((TextView) header.findViewById(R.id.nombreUser)).setText(perfil.getNombreUsuario() + "");
                 ((TextView) header.findViewById(R.id.gmail)).setText(perfil.getCorreoElectronico() + "");
+                ((TextView) header.findViewById(R.id.code)).setText("Cuenta Normal");
 
             }
 
@@ -224,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             //informacion del usuario que se muestra en el drawer header
-            ((TextView) header.findViewById(R.id.nombre)).setText(user.getDisplayName());
+            ((TextView) header.findViewById(R.id.nombreUser)).setText(user.getDisplayName());
             ((TextView) header.findViewById(R.id.gmail)).setText(user.getEmail());
             ((TextView) header.findViewById(R.id.code)).setText("Cuenta Facebook");
 
@@ -292,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             GoogleSignInAccount account = result.getSignInAccount();
 
             //informacion del usuario que se muestra en el drawer header
-            ((TextView) header.findViewById(R.id.nombre)).setText(account.getDisplayName());
+            ((TextView) header.findViewById(R.id.nombreUser)).setText(account.getDisplayName());
             ((TextView) header.findViewById(R.id.gmail)).setText(account.getEmail());
             ((TextView) header.findViewById(R.id.code)).setText("Cuenta Google");
 

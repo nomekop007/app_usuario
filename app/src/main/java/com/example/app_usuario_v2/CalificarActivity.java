@@ -288,7 +288,7 @@ public class CalificarActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Reclamo enviado!", Toast.LENGTH_LONG).show();
             finish();
         } else {
-            Toast.makeText(getApplicationContext(), "ingrese algun comentario", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "campo vacio!", Toast.LENGTH_LONG).show();
         }
 
     }

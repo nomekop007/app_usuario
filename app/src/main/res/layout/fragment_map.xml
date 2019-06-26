@@ -34,10 +34,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
-
                 android:text="linea X"
                 android:textColor="@color/colorPrimary"
-                android:textSize="14dp" />
+                android:textSize="13dp" />
 
 
             <TextView
