@@ -127,6 +127,7 @@ public class PerfilFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                Log.e("tipo logeo ",TipoLogeo+"");
                 //pregunta si es un logeo normal o no
                 if (TipoLogeo == 1) {
 
@@ -140,12 +141,10 @@ public class PerfilFragment extends Fragment {
                 } else {
                     //logeo con cuenta de facebook o google
 
-
                     //validar todos los campos
                     if (!validarNombre() | !validarCorreo() | !validarDireccion()) {
                         return;
                     }
-
 
                     Usuario u = new Usuario();
                     u.setIdUsuario(user.getUid());
@@ -178,6 +177,7 @@ public class PerfilFragment extends Fragment {
         progressDialog.setMessage("verificando datos...");
         progressDialog.show();
         //actualizar Email
+        Log.e("user logeado ",user.getEmail()+"  "+user.getUid());
         user.updateEmail(correo.getEditText().getText().toString().trim())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -190,7 +190,7 @@ public class PerfilFragment extends Fragment {
                             usuario.setDireccion(direccion.getEditText().getText().toString().trim());
 
                             //actualizar Usuario
-                            myDatabase.child("usuario").child(usuario.getIdUsuario()).setValue(usuario);
+                            myDatabase.child("usuario").child(user.getUid()).setValue(usuario);
                             Toast.makeText(getContext(), "datos actualizados!", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
                             return;
@@ -295,9 +295,10 @@ public class PerfilFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    usuario = snapshot.getValue(Usuario.class);
+                 Usuario  u = snapshot.getValue(Usuario.class);
 
-                    if (usuario.getIdUsuario().equals(user.getUid())) {
+                    if (u.getIdUsuario().equals(user.getUid())) {
+                         usuario = u;
 
                         nombre.getEditText().setText(usuario.getNombreCompleto());
                         correo.getEditText().setText(usuario.getCorreoElectronico());
