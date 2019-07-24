@@ -146,29 +146,4 @@ public class LineaFragment extends Fragment {
         });
         progressDialog.dismiss();
     }
-
-
-
-
-
-    /*
-    private void octenerAgencia() {
-        myDatabase.child("agencia").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Agencia agencia = snapshot.getValue(Agencia.class);
-                    AgenciaList.add(agencia);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }*/
-
-
 }
