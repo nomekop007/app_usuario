@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".mapFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mapa"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MapsActivity" />
+
+    <RelativeLayout
+        android:id="@+id/ventana"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="9dp">
+
+            <TextView
+                android:id="@+id/v_linea"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="linea X"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13dp" />
+
+
+            <TextView
+                android:id="@+id/ida"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/v_linea"
+                android:text="ida"
+                android:textColor="@color/colorPrimary"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/vuelta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ida"
+                android:layout_marginRight="6dp"
+                android:text="regreso"
+                android:textColor="@color/colorRojo"
+                android:textSize="10dp" />
+
+            <RelativeLayout
+                android:id="@+id/azul"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_below="@id/v_linea"
+                android:layout_marginTop="6dp"
+                android:layout_toRightOf="@id/vuelta"
+                android:background="@color/colorPrimary"></RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rojo"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_below="@id/azul"
+                android:layout_marginTop="9dp"
+                android:layout_toRightOf="@id/vuelta"
+                android:background="@color/colorRojo"></RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/bottonGps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="30dp"
+        android:background="@color/colorBlanco"
+        android:backgroundTint="@color/colorBlanco"
+        android:outlineAmbientShadowColor="@color/colorplomo"
+        android:outlineSpotShadowColor="@color/colorplomo"
+        android:src="@drawable/gps" />
+
+</RelativeLayout>

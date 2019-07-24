@@ -4,8 +4,14 @@
     <item android:title=""></item>
     <item android:title=""></item>
 
-    <item android:title="mi Perfil" android:icon="@drawable/user"></item>
-    <item android:title="Lineas de Trasporte" android:icon="@drawable/bus"></item>
+    <item android:title="mi Perfil"
+        android:icon="@drawable/user" android:id="@+id/perfil"></item>
+
+    <item android:title="Lineas de Trasporte"
+        android:icon="@drawable/bus" android:id="@+id/lineas"></item>
+
+    <item android:title="Mapa"
+        android:icon="@drawable/map" android:id="@+id/mapa"></item>
 
     <item android:title=""></item>
     <item android:title=""></item>

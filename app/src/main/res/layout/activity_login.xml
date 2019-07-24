@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/debianflowlogin"
+    tools:context=".LoginActivity">
+
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ScrollView01"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginVertical="20dp"
+            android:background="@drawable/bordes">
+
+
+
+            <ImageView
+                android:id="@+id/circulo2"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/circulo" />
+
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/bus" />
+
+            <TextView
+                android:id="@+id/titulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img"
+                android:layout_centerHorizontal="true"
+                android:text="Trasport-Talca"
+                android:layout_margin="20dp"
+                android:textSize="20dp" />
+
+
+            <EditText
+                android:id="@+id/txt_correo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titulo"
+                android:layout_margin="4dp"
+                android:hint="correo"
+                android:maxLength="30"
+                android:inputType="textEmailAddress" />
+
+
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/txt_pass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_correo"
+                android:layout_margin="4dp"
+                app:passwordToggleEnabled="true"
+                app:errorEnabled="true">
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="contraseña"
+                    android:maxLength="20"
+                    android:inputType="textPassword"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_ingresar"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@id/txt_pass"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="5dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorPrimary"
+                android:onClick="iniciar"
+                android:text="iniciar sesion"
+                android:textColor="@color/colorBlanco" />
+
+
+            <TextView
+                android:id="@+id/btn_registrar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_ingresar"
+                android:layout_centerHorizontal="true"
+               android:layout_margin="30dp"
+                android:onClick="registrar"
+                android:text="Registrarse"
+                android:textSize="20dp" />
+
+
+            <LinearLayout
+                android:layout_margin="25dp"
+                android:layout_below="@id/btn_registrar"
+                android:layout_width="100dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+                <com.google.android.gms.common.SignInButton
+                    android:id="@+id/btn_gmail"
+                    android:layout_width="45dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="10dp"></com.google.android.gms.common.SignInButton>
+
+                <com.facebook.login.widget.LoginButton
+                    android:id="@+id/btn_facebook"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
+                    />
+
+            </LinearLayout>
+
+
+
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

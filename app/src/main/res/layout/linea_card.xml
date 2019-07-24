@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@color/colorplomo">
+
+    <ImageView
+        android:id="@+id/item_img"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="8dp"
+        android:src="@drawable/circulo" />
+
+    <ImageView
+        android:id="@+id/item_bus"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+       android:layout_margin="8dp"
+        android:src="@drawable/bus" />
+
+
+
+    <TextView
+        android:id="@+id/item_linea"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/item_img"
+        android:text="nombre Linea"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/item_agencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_linea"
+        android:layout_toRightOf="@+id/item_img"
+        android:text="nombre agencia"
+        android:textSize="13dp"
+        android:textStyle="italic" />
+    <TextView
+        android:id="@+id/item_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_agencia"
+        android:layout_toRightOf="@+id/item_img"
+        android:text="id"
+        android:textSize="0dp" />
+
+</RelativeLayout>
