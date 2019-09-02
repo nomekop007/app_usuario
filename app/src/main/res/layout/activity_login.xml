@@ -9,21 +9,11 @@
     tools:context=".LoginActivity">
 
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/ScrollView01"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="30dp"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="30dp"
             android:background="@drawable/bordes">
 
 
@@ -52,7 +42,7 @@
                 android:layout_below="@id/img"
                 android:layout_centerHorizontal="true"
                 android:text="Trasport-Talca"
-                android:layout_margin="20dp"
+                android:layout_margin="30dp"
                 android:textSize="20dp" />
 
 
@@ -140,8 +130,6 @@
 
         </RelativeLayout>
 
-    </LinearLayout>
 
-    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

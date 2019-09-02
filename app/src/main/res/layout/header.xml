@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
+    android:layout_height="160dp"
     android:background="@color/colorPrimary"
     android:layout_marginTop="20dp">
 
@@ -10,9 +10,9 @@
 
         android:id="@+id/circulo"
         android:layout_below="@id/toolbar"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_margin="20dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_margin="15dp"
         android:src="@drawable/circulo" />
 
 
@@ -20,41 +20,32 @@
     <ImageView
         android:id="@+id/imagenUser"
         android:layout_below="@id/toolbar"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-      android:layout_margin="20dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+      android:layout_margin="15dp"
         android:src="@drawable/user" />
 
-    <TextView
-        android:id="@+id/usuario"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="17dp"
-        android:text=""
-        android:textColor="@color/colorBlanco"
-        android:layout_toRightOf="@id/imagenUser"
-        android:layout_marginTop="10dp"
-        />
+
     <TextView
         android:id="@+id/nombreUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dp"
+        android:textSize="15dp"
         android:text="nombre"
+        android:textStyle="bold"
+        android:layout_marginLeft="15dp"
         android:textColor="@color/colorBlanco"
-        android:layout_toRightOf="@id/imagenUser"
-        android:layout_below="@id/usuario"
+        android:layout_below="@id/imagenUser"
         />
-
 
     <TextView
         android:id="@+id/gmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="13dp"
+        android:textSize="15dp"
         android:textColor="@color/colorBlanco"
         android:text="gmail"
-        android:layout_toRightOf="@id/imagenUser"
+        android:layout_marginLeft="15dp"
         android:layout_below="@id/nombreUser"
         />
     <TextView
@@ -64,7 +55,7 @@
         android:textSize="10dp"
         android:textColor="@color/colorEtiqueta"
         android:text="code"
-        android:layout_toRightOf="@id/imagenUser"
+        android:layout_marginLeft="15dp"
         android:layout_below="@id/gmail"
         android:textStyle="italic"
         />
