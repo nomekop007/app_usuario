@@ -90,21 +90,12 @@
                 android:textColor="@color/colorBlanco" />
 
 
-            <TextView
-                android:id="@+id/btn_registrar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/btn_ingresar"
-                android:layout_centerHorizontal="true"
-               android:layout_margin="30dp"
-                android:onClick="registrar"
-                android:text="Registrarse"
-                android:textSize="20dp" />
+
 
 
             <RelativeLayout
             android:layout_marginTop="20dp"
-                android:layout_below="@id/btn_registrar"
+                android:layout_below="@id/btn_ingresar"
                 android:layout_width="match_parent"
                 android:layout_centerHorizontal="true"
                 android:layout_height="match_parent"

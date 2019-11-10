@@ -77,9 +77,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //cierra todas las sesion cada vez que se inicia la app
-        FirebaseAuth.getInstance().signOut();
-        LoginManager.getInstance().logOut();
         SolicitudDePermisoGPS();
 
         //iniciar progressDialig
@@ -173,11 +170,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-
-    public void registrar(View view) {
-        Intent intent = new Intent(this, RegistrarActivity.class);
-        startActivity(intent);
-    }
 
 
     public void logeoConFacebook() {

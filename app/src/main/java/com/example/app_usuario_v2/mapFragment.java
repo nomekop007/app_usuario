@@ -165,6 +165,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         //llama al metodo si es que hay una linea seleccionada
         if (ID != 0) {
             mostrarRecorrido(ID);
+
         }
 
         //que la aplicacion empieze con la ubicacion de talca
