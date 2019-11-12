@@ -41,74 +41,28 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class LoginActivity extends AppCompatActivity {
 
     private int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
-    public static int TIPO_LOGEO = 0;
-    // 1 es logeo normal
-    // 2 es logeo con google
-    // 3 es logeo con facebook
 
-    //variables del cliente de google
-    private GoogleApiClient googleApiClient;
-    private SignInButton signInButton;
-
-    //variables del cliente facebook
-    private LoginButton loginButton;
-    private CallbackManager callbackManager;
-
-
-    //declarar objeto firebaseAuth
-    private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
 
     //declarar circulo de cargando
     private ProgressDialog progressDialog;
 
 
-    public static final int SIGN_IN_CODE = 777;
-
-    EditText t_correo;
-    TextInputLayout t_pass;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         SolicitudDePermisoGPS();
-
-        //iniciar progressDialig
-        progressDialog = new ProgressDialog(this);
-
-        logeoConGmail();
-        logeoConFacebook();
-
-
-        //escucha si es que se habre alguna instancia de logeo
-        firebaseAuth = firebaseAuth.getInstance();
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-
-                    goMainScreen(TIPO_LOGEO);
-                }
-                progressDialog.dismiss();
-            }
-        };
     }
 
 
     private void SolicitudDePermisoGPS() {
-
         //pregunta si el permiso no esta dado
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-
-            Log.e("permiso : ", "no dado");
 
             //si no esta dado , habre la ventana de pregunta
             ActivityCompat.requestPermissions(this,
@@ -117,202 +71,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             return;
 
         }
-
-
     }
 
-    //logearse con cuenta creada
-    public void iniciar(View view) {
-        t_correo = findViewById(R.id.txt_correo);
-        t_pass = findViewById(R.id.txt_pass);
-
-        String correo = t_correo.getText().toString();
-        String pass = t_pass.getEditText().getText().toString().trim();
-
-        if (correo.isEmpty()) {
-            t_correo.setError("Campo Vacio");
-            t_correo.requestFocus();
-
-        } else if (pass.isEmpty()) {
-            t_pass.setError("Campo Vacio");
-            t_pass.requestFocus();
-        } else {
-
-            //cuadro de espera
-            progressDialog.setMessage("Validando...");
-            progressDialog.show();
-
-
-            //inicializar el objeto firebaseAuth
-            firebaseAuth = FirebaseAuth.getInstance();
-
-            firebaseAuth.signInWithEmailAndPassword(correo, pass)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-
-                            if (task.isSuccessful()) {
-
-                                TIPO_LOGEO = 1;
-                                //metodo para redireccionar al main
-                                goMainScreen(TIPO_LOGEO);
-                            } else {
-                                Toast.makeText(LoginActivity.this, "nombre o contraseña incorrecto", Toast.LENGTH_SHORT).show();
-                                t_pass.getEditText().setText("");
-                                t_pass.setError(null);
-                            }
-
-                            progressDialog.dismiss();
-                        }
-
-                    });
-
-        }
-    }
-
-
-
-    public void logeoConFacebook() {
-        callbackManager = CallbackManager.Factory.create();
-        loginButton = findViewById(R.id.btn_facebook);
-        // loginButton.setReadPermissions(Arrays.asList("email"));
-        loginButton.setPermissions(Arrays.asList("email"));
-
-        //se oprime botton de facebook
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                //cuadro de espera
-                progressDialog.setMessage("iniciando Sesion con Facebook...");
-                progressDialog.show();
-                TIPO_LOGEO = 3;
-                hardleFacebookAccessToken(loginResult.getAccessToken());
-            }
-
-            @Override
-            public void onCancel() {
-                Toast.makeText(getApplicationContext(), "se cancelo la operacion", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Toast.makeText(getApplicationContext(), "ocurrio un error al ingresar", Toast.LENGTH_LONG).show();
-            }
-        });
-
-
-    }
-
-    private void hardleFacebookAccessToken(AccessToken accessToken) {
-        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
-
-
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (!task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "ocurrio un error de login", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
-
-
-//fin de logeo facebook
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        firebaseAuth.addAuthStateListener(firebaseAuthListener);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        firebaseAuth.removeAuthStateListener(firebaseAuthListener);
-    }
-
-
-    // inicio de logeo con cuenta gmail
-    public void logeoConGmail() {
-
-        signInButton = findViewById(R.id.btn_gmail);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .build();
-
-        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
-
-
-        //se oprime botton de google
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //cuadro de espera
-                progressDialog.setMessage("iniciando Sesion con Google...");
-                progressDialog.show();
-                TIPO_LOGEO = 2;
-
-                Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(intent, SIGN_IN_CODE);
-            }
-        });
-
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == SIGN_IN_CODE) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResultGoogle(result);
-
-        }
-
-        //metodo de facebook
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-
-    }
-
-    private void handleSignInResultGoogle(GoogleSignInResult result) {
-        if (result.isSuccess()) {
-
-            firebaseAuthWithGoogle(result.getSignInAccount());
-
-        } else {
-
-            Toast.makeText(this, "Sesion cancelada", Toast.LENGTH_LONG).show();
-            progressDialog.dismiss();
-        }
-
-    }
-
-    private void firebaseAuthWithGoogle(GoogleSignInAccount signInAccount) {
-
-        AuthCredential credential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (!task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "ocurrio un error de login", Toast.LENGTH_LONG).show();
-                    progressDialog.dismiss();
-                }
-            }
-        });
-    }
-
-
-    // fin de logeo google
 
     private void goMainScreen(int tipo) {
         Intent intent = new Intent(this, MainActivity.class);
