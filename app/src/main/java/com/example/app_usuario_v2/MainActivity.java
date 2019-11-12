@@ -44,19 +44,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity  {
 
 
     public static int TIPO_LOGEO = 0;
-    // 1 es logeo normal
-    // 2 es logeo con google
-    // 3 es logeo con facebook
 
-    //clase de login gmail
-    private GoogleApiClient googleApiClient;
 
-    //hacer referencia a la base de datos de firebase
-    DatabaseReference mydatabasereference = FirebaseDatabase.getInstance().getReference();
 
     //declarar objeto firebaseAuth
     private FirebaseAuth firebaseAuth;
@@ -92,16 +85,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         configuracionDrawer();
 
-        if (TIPO_LOGEO == 2) {
-            configuraciondeLoginGmail();
-        } else if (TIPO_LOGEO == 3) {
-            configuracionLoginFacebook();
-        } else {
-            //opcion en caso de iniciar directamente
-            configuracionLoginFacebook();
-        }
-
-
     }
 
 
@@ -129,17 +112,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                 switch (menuItem.getItemId()) {
                     case R.id.cerrar:
-                        //cuadro de espera
+                     //cuadro de espera
                         progressDialog.setMessage("cerrando sesion");
                         progressDialog.show();
-
-                        if (TIPO_LOGEO == 2) {
-                            cerrarSesionGoogle();
-                        } else if (TIPO_LOGEO == 3) {
-                            cerrarSesionFacebook();
-                        } else {
-                            cerrarSesion();
-                        }
+                        cerrarSesion();
 
                         break;
                     case R.id.mapa:
@@ -168,15 +144,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                         break;
                 }
-
-
                 drawerLayout.closeDrawers();
-
                 return true;
             }
         });
-
-
         setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer);
         drawerLayout.setDrawerListener(toggle);
@@ -185,132 +156,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
 
-    //metodo para logearse con cuenta facebook
-    private void configuracionLoginFacebook() {
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            //informacion del usuario que se muestra en el drawer header
-            ((TextView) header.findViewById(R.id.nombreUser)).setText(user.getDisplayName());
-            ((TextView) header.findViewById(R.id.gmail)).setText(user.getEmail());
-            //cargar imagen
-            Glide.with(this)
-                    .load(user.getPhotoUrl())
-                    .centerCrop()
-                    .circleCrop()
-                    .error(R.drawable.error)
-                    .placeholder(R.drawable.cargando)
-                    .thumbnail(0.5f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into((ImageView) header.findViewById(R.id.circulo));
-
-        } else {
-            goLoginInSreen();
-        }
-    }
-
-    private void cerrarSesionFacebook() {
-
-        FirebaseAuth.getInstance().signOut();
-        LoginManager.getInstance().logOut();
-        goLoginInSreen();
-        progressDialog.dismiss();
-    }
 
 
-    // metodos para logearse con cuenta gmail
-    public void configuraciondeLoginGmail() {
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
 
 
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (TIPO_LOGEO == 2) {
-            OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
-            if (opr.isDone()) {
-                GoogleSignInResult result = opr.get();
-                handSignInResult(result);
-
-            } else {
-                opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                    @Override
-                    public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-                        handSignInResult(googleSignInResult);
-                    }
-                });
-
-            }
-        }
-    }
-
-    //metodo donde se extrae al usuario logeado
-    private void handSignInResult(GoogleSignInResult result) {
-        if (result.isSuccess()) {
-
-            GoogleSignInAccount account = result.getSignInAccount();
-
-            //informacion del usuario que se muestra en el drawer header
-            ((TextView) header.findViewById(R.id.nombreUser)).setText(account.getDisplayName());
-            ((TextView) header.findViewById(R.id.gmail)).setText(account.getEmail());
-
-
-            //cargar imagen
-            Glide.with(this)
-                    .load(account.getPhotoUrl())
-                    .centerCrop()
-                    .circleCrop()
-                    .error(R.drawable.error)
-                    .placeholder(R.drawable.cargando)
-                    .thumbnail(0.5f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into((ImageView) header.findViewById(R.id.circulo));
-
-        } else {
-            goLoginInSreen();
-        }
-
-    }
 
     private void goLoginInSreen() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         Toast.makeText(MainActivity.this, "sesion cerrada!", Toast.LENGTH_SHORT).show();
-
         startActivity(intent);
 
     }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-    }
-
-    private void cerrarSesionGoogle() {
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                if ((status.isSuccess())) {
-
-                    //agregado?
-                    firebaseAuth.getInstance().signOut();
-                    LoginManager.getInstance().logOut();
-
-                    goLoginInSreen();
-                } else {
-                    Toast.makeText(getApplicationContext(), "no se pudo cerrar sesion", Toast.LENGTH_LONG).show();
-                }
-                progressDialog.dismiss();
-            }
-        });
-
-    }
-    // fin de metodos
 
     private void cerrarSesion() {
         firebaseAuth.getInstance().signOut();
