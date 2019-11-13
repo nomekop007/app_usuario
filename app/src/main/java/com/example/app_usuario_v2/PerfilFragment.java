@@ -22,11 +22,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.app_usuario_v2.model.Usuario;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,7 +56,7 @@ public class PerfilFragment extends Fragment {
 
 
     //llamar a Usuario
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+   // private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     private Usuario usuario;
     private int TipoLogeo;
@@ -88,10 +85,10 @@ public class PerfilFragment extends Fragment {
 
         fm = getFragmentManager();
         ft = fm.beginTransaction();
-
+/*
         MostrarDatosUsuario();
         CheckboxOpcion();
-        BotonGuardarCambios();
+        BotonGuardarCambios();*/
         return v;
     }
 
@@ -120,7 +117,7 @@ public class PerfilFragment extends Fragment {
         });
     }
 
-
+/*
     public void BotonGuardarCambios() {
         //evento botton
         btn.setOnClickListener(new View.OnClickListener() {
@@ -376,5 +373,5 @@ public class PerfilFragment extends Fragment {
         }
 
     }
-
+*/
 }
