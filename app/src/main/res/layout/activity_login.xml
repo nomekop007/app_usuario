@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,6 +22,15 @@
                 android:text="Trasport-Talca"
                 android:layout_margin="30dp"
                 android:textSize="20dp" />
+            <Button
+                android:id="@+id/btn_sing_out"
+                android:layout_centerInParent="true"
+                android:text="singOut"
+                android:enabled="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </Button>
 
 
 
@@ -30,4 +39,4 @@
 
 
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

@@ -24,8 +24,6 @@ import android.widget.Toolbar;
 public class MainActivity extends AppCompatActivity  {
 
 
-    public static int TIPO_LOGEO = 0;
-
 
 
     //declarar elementos de drawer
@@ -49,9 +47,6 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //extraer tipo de logeo
-        Intent i = getIntent();
-        TIPO_LOGEO = Integer.parseInt(i.getStringExtra("TIPO_LOGEO"));
 
         //iniciar progressDialig
         progressDialog = new ProgressDialog(this);
@@ -111,7 +106,7 @@ public class MainActivity extends AppCompatActivity  {
 
                         //enviar parametros
                         Bundle bundle = new Bundle();
-                        bundle.putInt("TIPO_LOGEO", TIPO_LOGEO);
+                        bundle.putInt("TIPO_LOGEO", 0);
                         perfilFragment.setArguments(bundle);
 
                         fm.beginTransaction().replace(R.id.mainActivity, perfilFragment).commit();
