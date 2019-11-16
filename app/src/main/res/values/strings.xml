@@ -4,7 +4,7 @@
     <string name="closeDrawer">close</string>
     <string name="title_activity_maps">Map</string>
 
-    <string name="facebook_app_id" translatable="false">300345347545674</string>
+    <string name="facebook_application_id" translatable="false">300345347545674</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb300345347545674</string>
 
 

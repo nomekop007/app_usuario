@@ -13,28 +13,14 @@
             android:layout_height="match_parent"
             android:layout_margin="20dp">
 
-
             <TextView
                 android:id="@+id/titulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="Trasport-Talca"
-                android:layout_margin="30dp"
-                android:textSize="20dp" />
-            <Button
-                android:id="@+id/btn_sing_out"
                 android:layout_centerInParent="true"
-                android:text="singOut"
-                android:enabled="false"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            </Button>
-
-
-
-
+                android:textSize="45dp" />
         </RelativeLayout>
 
 

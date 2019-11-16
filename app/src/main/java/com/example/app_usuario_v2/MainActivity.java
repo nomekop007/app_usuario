@@ -20,11 +20,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 
 public class MainActivity extends AppCompatActivity  {
 
 
-
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     //declarar elementos de drawer
     private DrawerLayout drawerLayout;
@@ -46,14 +54,36 @@ public class MainActivity extends AppCompatActivity  {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         //iniciar progressDialig
         progressDialog = new ProgressDialog(this);
-
-
         configuracionDrawer();
+        cargarPerfil();
+    }
 
+    private void cargarPerfil() {
+
+        if (user != null ) {
+
+
+            //informacion del usuario que se muestra en el drawer header
+            ((TextView) header.findViewById(R.id.nombreUser)).setText(user.getDisplayName());
+            ((TextView) header.findViewById(R.id.gmail)).setText(user.getEmail());
+
+
+            //cargar imagen
+            Glide.with(this)
+                    .load(user.getPhotoUrl())
+                    .centerCrop()
+                    .circleCrop()
+                    .error(R.drawable.error)
+                    .placeholder(R.drawable.cargando)
+                    .thumbnail(0.5f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into((ImageView) header.findViewById(R.id.circulo));
+
+        } else {
+
+        }
     }
 
 
@@ -82,7 +112,7 @@ public class MainActivity extends AppCompatActivity  {
                 switch (menuItem.getItemId()) {
                     case R.id.cerrar:
                      //cuadro de espera
-                        progressDialog.setMessage("cerrando sesion");
+                        progressDialog.setMessage("cerrando sesion...");
                         progressDialog.show();
                         cerrarSesion();
 
@@ -126,22 +156,18 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
-
-
-
-
-
-    private void goLoginInSreen() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        Toast.makeText(MainActivity.this, "sesion cerrada!", Toast.LENGTH_SHORT).show();
-        startActivity(intent);
-
-    }
-
     private void cerrarSesion() {
-        goLoginInSreen();
-        progressDialog.dismiss();
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        progressDialog.dismiss();
+                    }
+                });
+
     }
 
     @Override
