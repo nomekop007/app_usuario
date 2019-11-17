@@ -5,21 +5,16 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.auth.AuthUI;
@@ -62,13 +57,9 @@ public class MainActivity extends AppCompatActivity  {
 
     private void cargarPerfil() {
 
-        if (user != null ) {
-
-
             //informacion del usuario que se muestra en el drawer header
             ((TextView) header.findViewById(R.id.nombreUser)).setText(user.getDisplayName());
             ((TextView) header.findViewById(R.id.gmail)).setText(user.getEmail());
-
 
             //cargar imagen
             Glide.with(this)
@@ -81,9 +72,6 @@ public class MainActivity extends AppCompatActivity  {
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into((ImageView) header.findViewById(R.id.circulo));
 
-        } else {
-
-        }
     }
 
 

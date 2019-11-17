@@ -11,16 +11,16 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="20dp">
+            android:layout_margin="90dp">
 
-            <TextView
-                android:id="@+id/titulo"
+
+            <ImageView
+                android:id="@+id/imageview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="Trasport-Talca"
                 android:layout_centerInParent="true"
-                android:textSize="45dp" />
+                android:src="@drawable/logo2"/>
+
         </RelativeLayout>
 
 

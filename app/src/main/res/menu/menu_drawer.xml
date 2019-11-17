@@ -13,10 +13,8 @@
     <item android:title="Mapa"
         android:icon="@drawable/map" android:id="@+id/mapa"></item>
 
-    <item android:title=""></item>
-    <item android:title=""></item>
 
-    <item android:title="">
+    <item android:title="" >
         <menu>
             <item
                 android:id="@+id/cerrar"

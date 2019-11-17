@@ -1,7 +1,6 @@
 package com.example.app_usuario_v2;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
@@ -9,10 +8,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,13 +25,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         SolicitudDePermisoGPS();
-
-        //iniciar proovedores
-        providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(), //Email
-                new AuthUI.IdpConfig.FacebookBuilder().build(), //facebook
-                new AuthUI.IdpConfig.GoogleBuilder().build() // google
-        );
         showsignOptions();
 
     }
@@ -43,8 +33,15 @@ public class LoginActivity extends AppCompatActivity {
     private void showsignOptions() {
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .setTheme(R.style.MyTheme)
+                        .setAvailableProviders(Arrays.asList(
+                                //iniciar proovedores
+                                new AuthUI.IdpConfig.EmailBuilder().build(), //Email
+                                new AuthUI.IdpConfig.FacebookBuilder().build(), //facebook
+                                new AuthUI.IdpConfig.GoogleBuilder().build() // google
+                        ))
+                        .setLogo(R.drawable.logo2)
+                        .setIsSmartLockEnabled(false,true)
+                        .setTheme(R.style.temaLogin)
                         .build(), MY_REQUEST_CODE
         );
     }
@@ -93,5 +90,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        isDestroyed();
+    }
 }
