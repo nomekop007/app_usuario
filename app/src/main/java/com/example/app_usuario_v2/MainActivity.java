@@ -57,9 +57,11 @@ public class MainActivity extends AppCompatActivity  {
 
     private void cargarPerfil() {
 
+
+
             //informacion del usuario que se muestra en el drawer header
-            ((TextView) header.findViewById(R.id.nombreUser)).setText(user.getDisplayName());
-            ((TextView) header.findViewById(R.id.gmail)).setText(user.getEmail());
+            ((TextView) header.findViewById(R.id.nombreUsuario)).setText(user.getDisplayName());
+            ((TextView) header.findViewById(R.id.correoElectronico)).setText(user.getEmail());
 
             //cargar imagen
             Glide.with(this)
